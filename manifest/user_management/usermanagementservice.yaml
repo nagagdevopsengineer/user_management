@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: user_management
-  namespace: user_management
+  namespace: usermanagement
   labels:
     app: user_management
 spec:
