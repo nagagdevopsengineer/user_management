@@ -31,7 +31,7 @@ deploy-user-management:
     - aws eks update-kubeconfig --name vapprtech --region us-east-2 
     - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
-    - kubectl apply -f manifest/customermanagement
+    - kubectl apply -f manifest/user_management
     - sleep 60
     - kubectl get pods -n usermanagement --field-selector=status.phase=Running
     - kubectl get svc -n usermanagement
