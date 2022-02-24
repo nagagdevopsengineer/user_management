@@ -1,8 +1,9 @@
 FROM openjdk:11
-ARG JAR_FILE=target/*.jar
+#ARG JAR_FILE=target/*.jar
 RUN apt-get update 
 RUN apt-get install -y maven
-#RUN bash -c 'touch /*.jar'
+ADD usermanagement-0.0.1-SNAPSHOT.jar user_management.jar
+#COPY  target/usermanagement-0.0.1-SNAPSHOT.jar user_management.jar
+RUN bash -c 'touch /user_management.jar'
 EXPOSE 8080
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","user_management.jar"]
