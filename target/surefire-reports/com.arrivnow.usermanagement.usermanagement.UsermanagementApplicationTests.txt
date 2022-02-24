@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.arrivnow.usermanagement.usermanagement.UsermanagementApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.484 s - in com.arrivnow.usermanagement.usermanagement.UsermanagementApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.515 s - in com.arrivnow.usermanagement.usermanagement.UsermanagementApplicationTests
