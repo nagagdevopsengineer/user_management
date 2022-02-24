@@ -4,7 +4,7 @@ metadata:
   name: usermanagement
   namespace: usermanagement
   labels:
-    app: user_management
+    app: usermanagement
 spec:
   replicas: 1
   selector:
