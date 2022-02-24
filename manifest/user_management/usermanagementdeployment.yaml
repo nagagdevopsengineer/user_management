@@ -16,8 +16,8 @@ spec:
         app: usermanagement
     spec:
       containers:
-      - name: user_management
-        image: vapprtech/user_management-openjdk:11
+      - name: usermanagement
+        image: vapprtech/usermanagement-openjdk:11
         ports:
         - name: https
           containerPort: 8080

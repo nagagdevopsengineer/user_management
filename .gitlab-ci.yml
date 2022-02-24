@@ -1,7 +1,7 @@
 image: docker:19.03.12
 
 variables:
-  BUILD_IMAGE: "vapprtech/user_management-openjdk:11"
+  BUILD_IMAGE: "vapprtech/usermanagement-openjdk:11"
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
