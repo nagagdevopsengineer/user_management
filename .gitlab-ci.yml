@@ -1,3 +1,43 @@
-Stage:
-    xyz
-    fhfhf
+image: docker:19.03.12
+
+variables:
+  BUILD_IMAGE: "vapprtech/user_management-openjdk:11"
+  DOCKER_TLS_CERTDIR: "/certs"
+
+services:
+  - docker:19.03.12-dind
+
+stages:          # List of stages for jobs, and their order of execution
+  - build_image
+  - deploy_user_management
+
+docker-build-image:
+  stage: build_image
+  script:
+    - docker info
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker build -t ${BUILD_IMAGE} -f Dockerfile .
+    - docker push  ${BUILD_IMAGE}
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "master"'
+      exists:
+        - Dockerfile
+      when: always
+
+deploy-user-management:
+  stage: deploy_user_management
+  image: vapprtech/awskubectl:latest
+  before_script:
+    - aws eks update-kubeconfig --name vapprtech --region us-east-2 
+    - kubectl create namespace user_management  --dry-run=client -o yaml | kubectl apply -f -   
+  script:
+    - kubectl apply -f manifest/customermanagement
+    - sleep 60
+    - kubectl get pods -n user_management --field-selector=status.phase=Running
+    - kubectl get svc -n user_management
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "master"'
+      changes:
+        - manifest/user_management
+      when: always
+

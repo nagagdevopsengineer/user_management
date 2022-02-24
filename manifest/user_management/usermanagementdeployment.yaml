@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user_management
+  namespace: user_management
+  labels:
+    app: user_management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user_management
+  template:
+    metadata:
+      labels:
+        app: user_management
+    spec:
+      containers:
+      - name: user_management
+        image: vapprtech/user_management-openjdk:11
+        ports:
+        - name: https
+          containerPort: 8080
