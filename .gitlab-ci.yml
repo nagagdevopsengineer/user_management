@@ -29,12 +29,12 @@ deploy-user-management:
   image: vapprtech/awskubectl:latest
   before_script:
     - aws eks update-kubeconfig --name vapprtech --region us-east-2 
-    - kubectl create namespace user_management  --dry-run=client -o yaml | kubectl apply -f -   
+    - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
     - kubectl apply -f manifest/customermanagement
     - sleep 60
-    - kubectl get pods -n user_management --field-selector=status.phase=Running
-    - kubectl get svc -n user_management
+    - kubectl get pods -n usermanagement --field-selector=status.phase=Running
+    - kubectl get svc -n usermanagement
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "master"'
       changes:
