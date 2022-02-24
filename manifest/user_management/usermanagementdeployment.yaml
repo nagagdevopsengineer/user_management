@@ -20,4 +20,4 @@ spec:
         image: vapprtech/usermanagement-openjdk:11
         ports:
         - name: https
-          containerPort: 8080
+          containerPort: 8082
