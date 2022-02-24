@@ -5,7 +5,7 @@ ARG JAR_FILE=target/*.jar
 ADD pom.xml /code/pom.xml 
 #RUN ["mvn", "dependency:resolve"]   
 RUN mvn package
-COPY  target/*.jar *.jar
-RUN bash -c 'touch /*.jar'
+COPY  target/usermanagement-0.0.1-SNAPSHOT.jar user_management.jar
+RUN bash -c 'touch /user_management.jar'
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","user_management.jar"]
