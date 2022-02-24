@@ -1,5 +1,5 @@
 FROM maven:3.5.2-jdk-8-alpine
-RUN apt-get update 
+#RUN apt-get update 
 ARG JAR_FILE=target/*.jar 
 #RUN apt-get install -y maven
 #ADD pom.xml /code/pom.xml 
