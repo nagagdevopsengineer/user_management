@@ -1,10 +1,6 @@
-FROM maven:3.5.2-jdk-8-alpine
-#RUN apt-get update 
-ARG JAR_FILE=target/*.jar 
-#RUN apt-get install -y maven
-ADD pom.xml /code/pom.xml 
-#RUN ["mvn", "dependency:resolve"]   
-RUN mvn package
+FROM openjdk:11
+RUN apt-get update 
+RUN apt-get install -y maven
 COPY  target/usermanagement-0.0.1-SNAPSHOT.jar user_management.jar
 RUN bash -c 'touch /user_management.jar'
 EXPOSE 8080
