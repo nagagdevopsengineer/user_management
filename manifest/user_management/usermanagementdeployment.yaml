@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user_management
+  name: usermanagement
   namespace: usermanagement
   labels:
     app: user_management
@@ -9,11 +9,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user_management
+      app: usermanagement
   template:
     metadata:
       labels:
-        app: user_management
+        app: usermanagement
     spec:
       containers:
       - name: user_management
