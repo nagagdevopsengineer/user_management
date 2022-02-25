@@ -9,4 +9,4 @@ COPY pom.xml /app
 WORKDIR /app
 RUN mvn package
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","$(pwd)/target/usermanagement-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","./target/usermanagement-0.0.1-SNAPSHOT.jar"]

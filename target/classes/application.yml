@@ -1,9 +1,0 @@
-server:
-  port: 8082
-spring:
-  application:
-    name: usermanagement
-management:
-  server:
-    port: 4452
-
