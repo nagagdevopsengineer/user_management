@@ -13,7 +13,7 @@ import com.arrivnow.usermanagement.usermanagement.service.UserService;
 
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 public class UserResource {
 	
 	 private final UserService userService;
