@@ -6,7 +6,9 @@ import org.springframework.beans.BeanUtils;
 
 import com.arrivnow.usermanagement.usermanagement.model.User;
 
+import lombok.Data;
 
+@Data
 public class UserDTO {
 
     private Long id;

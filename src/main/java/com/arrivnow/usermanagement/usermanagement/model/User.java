@@ -1,6 +1,8 @@
 package com.arrivnow.usermanagement.usermanagement.model;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.data.annotation.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -24,8 +32,11 @@ public class User {
 	    @Column(name = "login")
 	    private String login;
 	    
-	    @Column(name = "password_hash")
-	    private String passwordHash;
+	    @JsonIgnore
+	    @NotNull
+	    @Size(min = 60, max = 60)
+	    @Column(name="password_hash")
+	    private String password;
 	    
 	    @Column(name = "first_name")
 	    private String firstName;
@@ -40,7 +51,7 @@ public class User {
 	    private String imageUrl;
 	    
 	    @Column(name = "activated")
-	    private Boolean activated;
+	    private boolean activated;
 	    
 	    @Column(name = "lang_key")
 	    private String langKey;
@@ -57,6 +68,8 @@ public class User {
 	    @Column(name = "created_date")
 	    private Date createdDate;
 	    
-	    
+	    @JsonIgnore
+	    @Transient
+	    private Set<Authority> authorities = new HashSet<>();
 
 }

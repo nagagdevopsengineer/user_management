@@ -1,0 +1,139 @@
+package com.arrivnow.usermanagement.usermanagement.service.impl;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import com.arrivnow.usermanagement.usermanagement.model.User;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+
+
+/**
+ * Service for sending emails.
+ * <p>
+ * We use the {@link Async} annotation to send emails asynchronously.
+ */
+@Service
+public class MailService {
+
+    private final Logger log = LoggerFactory.getLogger(MailService.class);
+
+    private static final String USER = "user";
+
+    private static final String BASE_URL = "baseUrl";
+
+
+
+    private final MessageSource messageSource;
+
+    private final SpringTemplateEngine templateEngine;
+
+    public MailService(
+        MessageSource messageSource,
+        SpringTemplateEngine templateEngine
+    ) {
+        this.messageSource = messageSource;
+        this.templateEngine = templateEngine;
+    }
+
+    @Async
+    public void sendEmail(String toEmail, String subject, String contentStr, boolean isMultipart, boolean isHtml) throws IOException {
+        log.debug(
+            "Send email[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
+            isMultipart,
+            isHtml,
+            toEmail,
+            subject,
+            contentStr
+        );
+
+        try {
+        	
+        	Email from = new Email("techsupport@arrivnow.com");
+        	Email to = new Email(toEmail);
+        	Content content = new Content("text/plain", contentStr);
+            Mail mail = new Mail(from, subject, to, content);
+            
+            SendGrid sg = new SendGrid("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");
+            Request request = new Request();
+            try {
+              request.setMethod(Method.POST);
+              request.setEndpoint("mail/send");
+              request.setBody(mail.build());
+              Response response = sg.api(request);
+              System.out.println(response.getStatusCode());
+              System.out.println(response.getBody());
+              System.out.println(response.getHeaders());
+            } catch (IOException ex) {
+              throw ex;
+            }
+            
+            
+            /**
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name());
+            message.setTo(to);
+            message.setFrom(jHipsterProperties.getMail().getFrom());
+            message.setSubject(subject);
+            message.setText(content, isHtml);
+            javaMailSender.send(mimeMessage);**/
+            log.debug("Sent email to User '{}'", to);
+        } catch (MailException e) {
+            log.warn("Email could not be sent to user '{}'", toEmail, e);
+        }
+    }
+
+    
+    
+    @Async
+    public void sendEmailFromTemplate(User user, String templateName, String titleKey) throws IOException {
+        if (user.getEmail() == null) {
+            log.debug("Email doesn't exist for user '{}'", user.getLogin());
+            return;
+        }
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Context context = new Context(locale);
+        context.setVariable(USER, user);
+        context.setVariable(BASE_URL, "http://localhost:8080/");
+        String content = templateEngine.process(templateName, context);
+        String subject = messageSource.getMessage(titleKey, null, locale);
+        sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+    @Async
+    public void sendActivationEmail(User user) throws IOException {
+        log.debug("Sending activation email to '{}'", user.getEmail());
+        sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
+    }
+
+    @Async
+    public void sendCreationEmail(User user) throws IOException {
+        log.debug("Sending creation email to '{}'", user.getEmail());
+        sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title");
+    }
+
+    @Async
+    public void sendPasswordResetMail(User user) throws IOException {
+        log.debug("Sending password reset email to '{}'", user.getEmail());
+        sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
+    }
+}
