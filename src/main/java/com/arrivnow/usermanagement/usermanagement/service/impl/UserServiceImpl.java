@@ -66,7 +66,7 @@ public class UserServiceImpl  implements UserService{
 	
 	
 	@Transactional
-    public void registerUser(UserDTO userDTO, String password) {
+    public UserDTO registerUser(UserDTO userDTO, String password) {
          userRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
             .flatMap(existingUser -> {
@@ -117,12 +117,14 @@ public class UserServiceImpl  implements UserService{
                     
                     userRepository.save(newUser);
                     
+                    return  new UserDTO(newUser);
+                    
            
     }
 	
 	
 	 @Transactional
-	    public User activateRegistration(String key) {
+	    public UserDTO activateRegistration(String key) {
 	        User user = userRepository
 	            .findOneByActivationKey(key);
 	            
@@ -132,13 +134,13 @@ public class UserServiceImpl  implements UserService{
 	        
 	        user =  userRepository.save(user);
 	        
-	        return user;
+	        return  new UserDTO(user);
 	            
 	    }
 
 	 
 	 @Transactional
-	    public User completePasswordReset(String newPassword, String key) {
+	    public UserDTO completePasswordReset(String newPassword, String key) {
 	      User user =   userRepository
 	            .findOneByResetKey(key);
 	      user.setPassword(passwordEncoder.encode(newPassword));
@@ -148,24 +150,24 @@ public class UserServiceImpl  implements UserService{
 	            
 	            user = userRepository.save(user);
 	            
-	            return user;
+	            return new UserDTO(user);
 	    }
 	 
 	 
 	 @Transactional
-	    public User requestPasswordReset(String mail) {
+	    public UserDTO requestPasswordReset(String mail) {
 	      User user =  userRepository
 	            .findOneByEmailIgnoreCase(mail).get();
 	            
 	                user.setResetKey(RandomUtil.generateResetKey());
 	                user.setResetDate(Instant.now());
 	                user = userRepository.save(user);
-	                return user;
+	                return new UserDTO(user);
 	    }
 	 
 	 
 	 @Transactional
-	    public User createUser(UserDTO userDTO) {
+	    public UserDTO createUser(UserDTO userDTO) {
 	        User user = new User();
 	        user.setLogin(userDTO.getLogin().toLowerCase());
 	        user.setFirstName(userDTO.getFirstName());
@@ -199,7 +201,7 @@ public class UserServiceImpl  implements UserService{
 	       user =  userRepository.save(user);
 	        
 	        
-	        return user;
+	       return new UserDTO(user);
 	    }
 	 
 	 

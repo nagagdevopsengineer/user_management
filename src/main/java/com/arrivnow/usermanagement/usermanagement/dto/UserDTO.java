@@ -22,7 +22,7 @@ public class UserDTO {
     private String login;
     
     @JsonIgnore
-    private String passwordHash;
+    private String password;
     
     private String firstName;
     
@@ -48,6 +48,10 @@ public class UserDTO {
     
     public UserDTO(User user) {
         BeanUtils.copyProperties(user, this);
+    }
+    
+    public UserDTO() {
+        // Empty constructor needed for Jackson.
     }
 	
 }

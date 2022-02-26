@@ -109,6 +109,21 @@
 		    <artifactId>sendgrid-java</artifactId>
 		    <version>4.8.3</version>
 		</dependency>
+        		<!-- https://mvnrepository.com/artifact/org.zalando/problem-spring-web -->
+		<dependency>
+		    <groupId>org.zalando</groupId>
+		    <artifactId>problem-spring-web</artifactId>
+		    <version>0.27.0</version>
+		</dependency>
+		
+		
+		<dependency>
+            <groupId>tech.jhipster</groupId>
+            <artifactId>jhipster-framework</artifactId>
+			<version>7.0.1</version>
+    </dependency>
+<!-- Thanks for using https://jar-download.com -->
+		
         		
 	</dependencies>
 	<dependencyManagement>
