@@ -1,10 +1,8 @@
 package com.arrivnow.usermanagement.usermanagement.service.impl;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
@@ -12,12 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
 import com.arrivnow.usermanagement.usermanagement.model.User;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
@@ -27,6 +25,7 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 
+import tech.jhipster.config.JHipsterProperties;
 
 /**
  * Service for sending emails.
@@ -42,16 +41,22 @@ public class MailService {
 
     private static final String BASE_URL = "baseUrl";
 
+    private final JHipsterProperties jHipsterProperties;
 
+    private final JavaMailSender javaMailSender;
 
     private final MessageSource messageSource;
 
     private final SpringTemplateEngine templateEngine;
 
     public MailService(
+        JHipsterProperties jHipsterProperties,
+        JavaMailSender javaMailSender,
         MessageSource messageSource,
         SpringTemplateEngine templateEngine
     ) {
+        this.jHipsterProperties = jHipsterProperties;
+        this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
     }
@@ -67,6 +72,8 @@ public class MailService {
             contentStr
         );
 
+        // Prepare message using a Spring helper
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
         	
         	Email from = new Email("techsupport@arrivnow.com");
@@ -102,10 +109,8 @@ public class MailService {
         }
     }
 
-    
-    
     @Async
-    public void sendEmailFromTemplate(User user, String templateName, String titleKey) throws IOException {
+    public void sendEmailFromTemplate(UserDTO user, String templateName, String titleKey) throws IOException {
         if (user.getEmail() == null) {
             log.debug("Email doesn't exist for user '{}'", user.getLogin());
             return;
@@ -113,26 +118,26 @@ public class MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, "http://localhost:8080/");
+        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
         String content = templateEngine.process(templateName, context);
         String subject = messageSource.getMessage(titleKey, null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
     }
 
     @Async
-    public void sendActivationEmail(User user) throws IOException {
+    public void sendActivationEmail(UserDTO user) throws IOException {
         log.debug("Sending activation email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
     }
 
     @Async
-    public void sendCreationEmail(User user) throws IOException {
+    public void sendCreationEmail(UserDTO user) throws IOException {
         log.debug("Sending creation email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title");
     }
 
     @Async
-    public void sendPasswordResetMail(User user) throws IOException {
+    public void sendPasswordResetMail(UserDTO user) throws IOException {
         log.debug("Sending password reset email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
     }

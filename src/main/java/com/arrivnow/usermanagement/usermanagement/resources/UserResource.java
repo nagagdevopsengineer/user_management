@@ -1,5 +1,6 @@
 package com.arrivnow.usermanagement.usermanagement.resources;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -43,14 +44,19 @@ public class UserResource {
 	    
 	    @PostMapping("/register")
 	    @ResponseStatus(HttpStatus.CREATED)
-	    public Void registerUser(UserDTO managedUserVM) {
+	    public void registerUser(UserDTO managedUserVM) {
 	    	
 	    	
 	    	if (!checkPasswordLength(managedUserVM.getPassword())) {
 	            throw new InvalidPasswordException();
 	        }
 	        UserDTO user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
-	        mailService.sendActivationEmail(user);
+	        try {
+				mailService.sendActivationEmail(user);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    }
 	    
 	    

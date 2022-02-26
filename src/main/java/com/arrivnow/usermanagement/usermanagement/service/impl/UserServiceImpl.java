@@ -108,9 +108,14 @@ public class UserServiceImpl  implements UserService{
                     
                    
                     Set<Authority> authorities = new HashSet<>();
-                    authorityRepository
-                        .findById(AuthoritiesConstants.USER)
-                        .map(authorities::add);
+                    
+                    for (String authority : userDTO.getAuthorities()) {
+                    	 authorityRepository
+                         .findById(authority)
+                         .map(authorities::add);
+					}
+                    
+                   
                     
 
                     newUser.setAuthorities(authorities );  

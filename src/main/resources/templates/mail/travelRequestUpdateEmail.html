@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
+    <head>
+        <title th:text="#{email.travel.request.status}">Travel request status</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="icon" th:href="@{|${baseUrl}/favicon.ico|}" />
+    </head>
+    <body>
+        <p th:text="${task.toName}">
+            Dear
+        </p>
+        Travel request status.
+        <p >
+       
+          <b> Title </b>       : <span th:text="${task.taskTitle}"></span><br>
+		  <b> Status  </b>  : <span th:text="${task.status}"> </span> <br>
+		  <b>  Changed By  </b>  : <span th:text="${task.name}"> </span> <br>
+		
+        </p>
+         <p>
+         please click on the URL below to login:
+            <a th:with="url=(@{|http://13.234.25.81/login|})" th:href="${url}"
+            th:text="${url}">Login link</a>
+        </p>
+        <p>
+           
+        </p>
+        <p>
+            <span th:text="#{email.activation.text2}">Regards, </span>
+            <br/>
+            <em th:text="#{email.signature}">JHipster.</em>
+        </p>
+    </body>
+</html>
