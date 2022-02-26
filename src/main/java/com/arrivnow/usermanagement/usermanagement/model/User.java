@@ -1,8 +1,9 @@
 package com.arrivnow.usermanagement.usermanagement.model;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +28,13 @@ public class User {
 	
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    @JsonIgnore
 	    private Long id;
+	    
+	    @NotNull
+	    @GeneratedValue(strategy = GenerationType.AUTO)
+	    @Column(name = "user_id")
+	    private UUID userId;
 	    
 	    @Column(name = "login")
 	    private String login;
@@ -63,10 +70,10 @@ public class User {
 	    private String resetKey;
 	    
 	    @Column(name = "reset_date")
-	    private Date resetDate;
+	    private Instant resetDate;
 	    
 	    @Column(name = "created_date")
-	    private Date createdDate;
+	    private Instant createdDate;
 	    
 	    @JsonIgnore
 	    @Transient
