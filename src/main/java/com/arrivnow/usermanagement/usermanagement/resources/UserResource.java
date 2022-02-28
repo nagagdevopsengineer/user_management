@@ -4,16 +4,18 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
-import com.arrivnow.usermanagement.usermanagement.resources.errors.InvalidPasswordException;
 import com.arrivnow.usermanagement.usermanagement.resources.vm.ManagedUserVM;
 import com.arrivnow.usermanagement.usermanagement.service.UserService;
 import com.arrivnow.usermanagement.usermanagement.service.impl.MailService;
@@ -21,6 +23,8 @@ import com.arrivnow.usermanagement.usermanagement.service.impl.MailService;
 @RestController
 @RequestMapping("users")
 public class UserResource {
+	
+	private final Logger log = LoggerFactory.getLogger(UserResource.class);
 	
 	 private final UserService userService;
 
@@ -44,12 +48,12 @@ public class UserResource {
 	    
 	    @PostMapping("/register")
 	    @ResponseStatus(HttpStatus.CREATED)
-	    public void registerUser(UserDTO managedUserVM) {
+	    public void registerUser(@RequestBody ManagedUserVM managedUserVM) {
 	    	
-	    	
-	    	if (!checkPasswordLength(managedUserVM.getPassword())) {
-	            throw new InvalidPasswordException();
-	        }
+	    	System.out.println(managedUserVM.getFirstName()+" Password  "+managedUserVM.getPassword());
+	    	//if (!checkPasswordLength(managedUserVM.getPassword())) {
+	         //   throw new InvalidPasswordException();
+	       // }
 	        UserDTO user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
 	        try {
 				mailService.sendActivationEmail(user);

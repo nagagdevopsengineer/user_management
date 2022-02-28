@@ -3,13 +3,10 @@ package com.arrivnow.usermanagement.usermanagement.service.impl;
 import java.io.IOException;
 import java.util.Locale;
 
-import javax.mail.internet.MimeMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
@@ -75,7 +72,7 @@ public class MailService {
         	
         	Email from = new Email("techsupport@arrivnow.com");
         	Email to = new Email(toEmail);
-        	Content content = new Content("text/plain", contentStr);
+        	Content content = new Content("text/html", contentStr);
             Mail mail = new Mail(from, subject, to, content);
             
             SendGrid sg = new SendGrid("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");
@@ -112,13 +109,15 @@ public class MailService {
             log.debug("Email doesn't exist for user '{}'", user.getLogin());
             return;
         }
-        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Locale locale = Locale.forLanguageTag("en");
         Context context = new Context(locale);
+        user.setWebURL("http://arrivnow.vapprtech.com");
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, "wsdsdsad");
+        context.setVariable(BASE_URL, "http://arrivnow.vapprtech.com");
         String content = templateEngine.process(templateName, context);
-        String subject = messageSource.getMessage(titleKey, null, locale);
-        sendEmail(user.getEmail(), subject, content, false, true);
+        System.out.println("  Sending email  ==>> ");
+       // String subject = messageSource.getMessage(titleKey, null, null);
+        sendEmail(user.getEmail(), "ArriveNow Account Created !! ", content, false, true);
     }
 
     @Async

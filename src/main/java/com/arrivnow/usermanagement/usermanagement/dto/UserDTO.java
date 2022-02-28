@@ -21,7 +21,7 @@ public class UserDTO {
     
     private String login;
     
-    @JsonIgnore
+   // @JsonIgnore
     private String password;
     
     private String firstName;
@@ -43,6 +43,8 @@ public class UserDTO {
     private Date resetDate;
     
     private Date createdDate;
+    
+    private String webURL;
     
     private Set<String> authorities;
     

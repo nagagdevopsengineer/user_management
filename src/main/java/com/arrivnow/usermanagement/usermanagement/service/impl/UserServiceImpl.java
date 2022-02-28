@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +106,7 @@ public class UserServiceImpl  implements UserService{
                     // new user gets registration key
                     newUser.setActivationKey(RandomUtil.generateActivationKey());
                     
-                    
+                    newUser.setUserId(UUID.randomUUID());
                     HashSet<Authority> authorities = new HashSet<>();
                     
                     for (String authority : userDTO.getAuthorities()) {
@@ -121,7 +122,11 @@ public class UserServiceImpl  implements UserService{
                     
                     userRepository.save(newUser);
                     
-                    return  new UserDTO(newUser);
+                    UserDTO userD = new UserDTO(newUser);
+                    
+                    userD.setPassword(password);
+                    
+                    return  userD;
                     
            
     }
