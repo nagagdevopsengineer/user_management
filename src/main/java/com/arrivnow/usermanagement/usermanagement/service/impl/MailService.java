@@ -16,7 +16,6 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
-import com.arrivnow.usermanagement.usermanagement.model.User;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -25,7 +24,6 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 
-import tech.jhipster.config.JHipsterProperties;
 
 /**
  * Service for sending emails.
@@ -41,22 +39,21 @@ public class MailService {
 
     private static final String BASE_URL = "baseUrl";
 
-    private final JHipsterProperties jHipsterProperties;
 
-    private final JavaMailSender javaMailSender;
+    //private final JavaMailSender javaMailSender;
 
     private final MessageSource messageSource;
 
     private final SpringTemplateEngine templateEngine;
 
     public MailService(
-        JHipsterProperties jHipsterProperties,
-        JavaMailSender javaMailSender,
+       // JHipsterProperties jHipsterProperties,
+        //JavaMailSender javaMailSender,
         MessageSource messageSource,
         SpringTemplateEngine templateEngine
     ) {
-        this.jHipsterProperties = jHipsterProperties;
-        this.javaMailSender = javaMailSender;
+       // this.jHipsterProperties = jHipsterProperties;
+       // this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
     }
@@ -73,7 +70,7 @@ public class MailService {
         );
 
         // Prepare message using a Spring helper
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+       // MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
         	
         	Email from = new Email("techsupport@arrivnow.com");
@@ -118,7 +115,7 @@ public class MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        context.setVariable(BASE_URL, "wsdsdsad");
         String content = templateEngine.process(templateName, context);
         String subject = messageSource.getMessage(titleKey, null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);

@@ -1,5 +1,6 @@
 package com.arrivnow.usermanagement.usermanagement.model;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,10 +24,15 @@ import lombok.Data;
 @Entity
 @Table(name = "user")
 @Data
-public class User {
+public class User implements Serializable{
 	
 	
-	    @Id
+	    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 848980811771649334L;
+
+		@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    @JsonIgnore
 	    private Long id;
@@ -75,8 +81,7 @@ public class User {
 	    @Column(name = "created_date")
 	    private Instant createdDate;
 	    
-	    @JsonIgnore
 	    @Transient
-	    private Set<Authority> authorities = new HashSet<>();
+	    private HashSet<Authority> authorities = new HashSet<>();
 
 }

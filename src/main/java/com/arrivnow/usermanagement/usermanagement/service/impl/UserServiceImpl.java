@@ -106,8 +106,7 @@ public class UserServiceImpl  implements UserService{
                     newUser.setActivationKey(RandomUtil.generateActivationKey());
                     
                     
-                   
-                    Set<Authority> authorities = new HashSet<>();
+                    HashSet<Authority> authorities = new HashSet<>();
                     
                     for (String authority : userDTO.getAuthorities()) {
                     	 authorityRepository
@@ -187,7 +186,7 @@ public class UserServiceImpl  implements UserService{
 	            user.setLangKey(userDTO.getLangKey());
 	        }
 	        
-	        Set<Authority> authorities = new HashSet<>();
+	        HashSet<Authority> authorities = new HashSet<>();
 	        
            for (String autho :  userDTO.getAuthorities()) {
  	        	
@@ -234,10 +233,10 @@ public class UserServiceImpl  implements UserService{
              Set<Authority> managedAuthorities = user.getAuthorities();
              managedAuthorities.clear();
 	         
-             userRepository
-             .deleteUserAuthorities(user.getId());
+            // userRepository
+             //.deleteUserAuthorities(user.getId());
              
-             Set<Authority> authorities = new HashSet<>();
+             HashSet<Authority> authorities = new HashSet<>();
  	        
  	        for (String autho :  userDTO.getAuthorities()) {
  	        	

@@ -19,7 +19,6 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 
 import com.arrivnow.usermanagement.usermanagement.exception.UsernameAlreadyUsedException;
 
-import tech.jhipster.web.util.HeaderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +38,7 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     private static final String PATH_KEY = "path";
     private static final String VIOLATIONS_KEY = "violations";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${clientApp.name}")
     private String applicationName;
 
     /**

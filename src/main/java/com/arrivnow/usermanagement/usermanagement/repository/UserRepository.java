@@ -18,6 +18,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	User findOneByResetKey(String key);
 
-	void deleteUserAuthorities(Long id);
+	Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String login);
+
+	Optional<User> findOneWithAuthoritiesByLogin(String lowercaseLogin);
+
+	//void deleteUserAuthorities(Long id);
 
 }
