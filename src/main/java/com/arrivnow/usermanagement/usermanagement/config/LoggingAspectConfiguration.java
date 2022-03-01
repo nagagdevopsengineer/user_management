@@ -12,7 +12,6 @@ import com.arrivnow.usermanagement.usermanagement.aop.logging.LoggingAspect;
 public class LoggingAspectConfiguration {
 
     @Bean
-    @Profile(EnvConstants.SPRING_PROFILE_DEVELOPMENT)
     public LoggingAspect loggingAspect(Environment env) {
         return new LoggingAspect(env);
     }
