@@ -12,7 +12,12 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import com.arrivnow.usermanagement.usermanagement.dto.OtpDTO;
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
+import com.arrivnow.usermanagement.usermanagement.util.RandomUtil;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -137,4 +142,39 @@ public class MailService {
         log.debug("Sending password reset email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
     }
+
+    @Async
+	public OtpDTO generateAndSendOTP(OtpDTO otp) {
+		log.debug(" Sending OTP to mobile ",otp);
+		
+		char[] otpc = RandomUtil.generateOTP();
+		otp.setOtp(Long.parseLong(otpc.toString()));
+		
+		otp = sendOTP(otp);
+		
+		return otp;
+	}
+
+	private OtpDTO sendOTP(OtpDTO otp) {
+		
+		return null;
+	}
+	
+	public static final String ACCOUNT_SID = "AC3f967b4e1f76a7e56162b630ee82cd37";
+    public static final String AUTH_TOKEN = "eee79916f6e2a3deac2ea1a28a3dcddc";
+
+		
+		
+	    public static void main(String[] args) {
+	        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+	        Message message = Message.creator(
+	        		 new com.twilio.type.PhoneNumber("+15558675310"),
+	                 new com.twilio.type.PhoneNumber("+15017122661"),
+	                 "McAvoy or Stewart? These timelines can get so confusing.")
+	             .create();
+
+
+	        System.out.println(message.getSid());
+		
+	}
 }

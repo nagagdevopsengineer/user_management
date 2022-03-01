@@ -27,6 +27,8 @@ public interface UserService {
 	  public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl);
 	  
 	  public void changePassword(String currentClearTextPassword, String newPassword) ;
+
+	  public UserDTO getUserWithAuthoritiesByLogin(String userLogin);
 	  
 	  
 

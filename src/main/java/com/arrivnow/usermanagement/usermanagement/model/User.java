@@ -11,11 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.data.annotation.Transient;
+import org.hibernate.annotations.BatchSize;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,7 +27,7 @@ import lombok.Data;
 @Entity
 @Table(name = "user")
 @Data
-public class User implements Serializable{
+public class User  implements Serializable{
 	
 	
 	    /**
@@ -81,7 +84,16 @@ public class User implements Serializable{
 	    @Column(name = "created_date")
 	    private Instant createdDate;
 	    
-	    @Transient
-	    private HashSet<Authority> authorities = new HashSet<>();
+	    @JsonIgnore
+	    @ManyToMany
+	    @JoinTable(
+	        name = "user_authority",
+	        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+	        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
+	    @BatchSize(size = 20)
+	    private Set<Authority> authorities = new HashSet<>();
+	    
+	    @Column(name = "otp")
+	    private Long otp;
 
 }

@@ -102,7 +102,7 @@ public class UserServiceImpl  implements UserService{
                     newUser.setImageUrl(userDTO.getImageUrl());
                     newUser.setLangKey(userDTO.getLangKey());
                     // new user is not active
-                    newUser.setActivated(false);
+                    newUser.setActivated(true);
                     // new user gets registration key
                     newUser.setActivationKey(RandomUtil.generateActivationKey());
                     
@@ -331,6 +331,17 @@ public class UserServiceImpl  implements UserService{
 	    public List<String> getAuthorities() {
 	        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
 	    }
+
+		@Override
+		public UserDTO getUserWithAuthoritiesByLogin(String userLogin) {
+			User user = userRepository.findOneByLogin(userLogin).get();
+			
+			System.out.println("asd as d as d "+user.getEmail());
+			
+			System.out.println("asd as    qsdsa  d as d "+user.getLogin());
+			
+			return new UserDTO(user);
+		}
 	    
 	    
 	    

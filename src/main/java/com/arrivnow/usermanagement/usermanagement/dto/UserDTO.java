@@ -1,11 +1,13 @@
 package com.arrivnow.usermanagement.usermanagement.dto;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 
+import com.arrivnow.usermanagement.usermanagement.model.Authority;
 import com.arrivnow.usermanagement.usermanagement.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,7 +23,7 @@ public class UserDTO {
     
     private String login;
     
-   // @JsonIgnore
+    @JsonIgnore
     private String password;
     
     private String firstName;
@@ -48,8 +50,21 @@ public class UserDTO {
     
     private Set<String> authorities;
     
+    private Long otp;
+    
     public UserDTO(User user) {
+    	
+    	 System.out.println(" user aut "+user.getAuthorities());
+    	 Set<String> authorities =  new HashSet<String>(); 
+         for (Authority auth : user.getAuthorities()) {
+        	 authorities.add(auth.getName());
+         	
+ 		}
+         this.setAuthorities(authorities);
         BeanUtils.copyProperties(user, this);
+        
+       
+       
     }
     
     public UserDTO() {

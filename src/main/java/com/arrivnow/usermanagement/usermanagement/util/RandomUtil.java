@@ -1,8 +1,9 @@
 package com.arrivnow.usermanagement.usermanagement.util;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.security.SecureRandom;
+import java.util.Random;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * Utility class for generating random Strings.
@@ -55,5 +56,20 @@ public final class RandomUtil {
      */
     public static String generateResetKey() {
         return generateRandomAlphanumericString();
+    }
+    
+    public static char[] generateOTP() {
+    	
+    	String numbers = "0123456789";
+    	Random rndm_method = new Random();
+    	char[] otp = new char[6];
+    	for (int i = 0; i < 6; i++)
+        {
+             otp[i] =
+             numbers.charAt(rndm_method.nextInt(numbers.length()));
+        }
+    	
+    	 return otp;
+    	
     }
 }
