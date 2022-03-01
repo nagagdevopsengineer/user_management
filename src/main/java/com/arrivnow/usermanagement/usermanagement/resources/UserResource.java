@@ -71,7 +71,7 @@ public class UserResource {
 	    
 	    @PostMapping("/register")
 	    @ResponseStatus(HttpStatus.CREATED)
-	    public void registerUser(@RequestBody ManagedUserVM managedUserVM) {
+	    public ResponseEntity<UserDTO>  registerUser(@RequestBody ManagedUserVM managedUserVM) {
 	    	
 	    	System.out.println(managedUserVM.getFirstName()+" Password  "+managedUserVM.getPassword());
 	    	//if (!checkPasswordLength(managedUserVM.getPassword())) {
@@ -84,6 +84,8 @@ public class UserResource {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	        
+	        return new ResponseEntity<>(user, HttpStatus.OK);
 	    }
 	    
 	    
@@ -131,7 +133,7 @@ public class UserResource {
         	String userLogin = SecurityUtils.getCurrentUserLogin().get();
             System.out.println("REST request to get User : {}"+ userLogin);
             UserDTO userDTO = userService.getUserWithAuthoritiesByLogin(userLogin);
-            return new ResponseEntity<>(userDTO, null, HttpStatus.OK);
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
         }
         
         
