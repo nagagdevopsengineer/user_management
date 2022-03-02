@@ -6,18 +6,19 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.mail.MailException;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.arrivnow.usermanagement.usermanagement.dto.OtpDTO;
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
+import com.arrivnow.usermanagement.usermanagement.service.UserService;
 import com.arrivnow.usermanagement.usermanagement.util.RandomUtil;
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -25,6 +26,8 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
 
 
 /**
@@ -47,17 +50,26 @@ public class MailService {
     private final MessageSource messageSource;
 
     private final SpringTemplateEngine templateEngine;
+    
+    private final Environment env;
+    
+    private final UserService userService;
 
     public MailService(
        // JHipsterProperties jHipsterProperties,
         //JavaMailSender javaMailSender,
         MessageSource messageSource,
-        SpringTemplateEngine templateEngine
+        SpringTemplateEngine templateEngine,
+        Environment env,
+        UserService userService
+        
     ) {
        // this.jHipsterProperties = jHipsterProperties;
        // this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
+        this.env = env;
+        this.userService = userService;
     }
 
     @Async
@@ -147,17 +159,64 @@ public class MailService {
 	public OtpDTO generateAndSendOTP(OtpDTO otp) {
 		log.debug(" Sending OTP to mobile ",otp);
 		
-		char[] otpc = RandomUtil.generateOTP();
-		otp.setOtp(Long.parseLong(otpc.toString()));
+		String OtpSMS = env.getProperty("otp.sms");
 		
-		otp = sendOTP(otp);
+		UserDTO user = userService.findOneByLogin(otp.getUserLogin());
+		
+		if(user != null && user.getId() > 0) {
+			char[] otpc = RandomUtil.generateOTP();
+			String otps = new String(otpc);
+			otp.setOtp(Long.parseLong(otps));
+			otp.setMobile(user.getMobile());
+			
+			OtpSMS = OtpSMS.replace("USERNAME", user.getFirstName());
+			OtpSMS = OtpSMS.replace("OTPN", otp.getOtp()+"");
+			if("DRIVER".equalsIgnoreCase(otp.getApp())) {
+				OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.dapp.hash"));
+			}else if ("EMPLOYEE".equalsIgnoreCase(otp.getApp())) {
+				OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.eapp.hash"));
+			}
+			
+			
+			otp = sendOTP(otp,OtpSMS);
+			
+			user.setOtp(otp.getOtp());
+			
+			userService.updateUser(user);
+			
+		}else {
+			
+			throw new UsernameNotFoundException("User not exist with given mobile.");
+			
+		}
+		
+		
 		
 		return otp;
 	}
 
-	private OtpDTO sendOTP(OtpDTO otp) {
+	private OtpDTO sendOTP(OtpDTO otp,String sms) {
 		
-		return null;
+		String mobile = otp.getMobile()+"";
+		
+		if(!mobile.startsWith("+91")) {
+			
+			mobile = "+91"+mobile;
+		}
+		
+		
+		Twilio.init(ACCOUNT_SID, AUTH_TOKEN); 
+        Message message = Message.creator( 
+                new com.twilio.type.PhoneNumber(mobile),  
+                "MG24313a7e6ae8031b9d72a5c277bb228b", 
+                sms)      
+            .create(); 
+        
+        
+        otp.setMessageId(message.getSid());
+        
+        return otp;
+ 
 	}
 	
 	public static final String ACCOUNT_SID = "AC3f967b4e1f76a7e56162b630ee82cd37";
@@ -165,16 +224,7 @@ public class MailService {
 
 		
 		
-	    public static void main(String[] args) {
-	        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-	        Message message = Message.creator(
-	        		 new com.twilio.type.PhoneNumber("+15558675310"),
-	                 new com.twilio.type.PhoneNumber("+15017122661"),
-	                 "McAvoy or Stewart? These timelines can get so confusing.")
-	             .create();
-
-
-	        System.out.println(message.getSid());
-		
-	}
+    public static void main(String[] args) { 
+    
+    } 
 }

@@ -29,6 +29,10 @@ public interface UserService {
 	  public void changePassword(String currentClearTextPassword, String newPassword) ;
 
 	  public UserDTO getUserWithAuthoritiesByLogin(String userLogin);
+
+	  UserDTO findByMobile(Long mobile);
+
+	  UserDTO findOneByLogin(String userLogin);
 	  
 	  
 

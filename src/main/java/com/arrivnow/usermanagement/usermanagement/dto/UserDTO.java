@@ -52,6 +52,9 @@ public class UserDTO {
     
     private Long otp;
     
+    @JsonIgnore
+    private Long mobile;
+    
     public UserDTO(User user) {
     	
     	 System.out.println(" user aut "+user.getAuthorities());

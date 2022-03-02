@@ -342,6 +342,18 @@ public class UserServiceImpl  implements UserService{
 			
 			return new UserDTO(user);
 		}
+
+		@Override
+		public UserDTO findByMobile(Long mobile) {
+			User user = userRepository.findOneByMobile(mobile);
+			return new UserDTO(user);
+		}
+
+		@Override
+		public UserDTO findOneByLogin(String userLogin) {
+			User user = userRepository.findOneByLogin(userLogin).get();
+			return  new UserDTO(user);
+		}
 	    
 	    
 	    

@@ -95,5 +95,8 @@ public class User  implements Serializable{
 	    
 	    @Column(name = "otp")
 	    private Long otp;
+	    
+	    @Column(name = "mobile")
+	    private Long mobile;
 
 }

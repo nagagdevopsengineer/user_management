@@ -131,8 +131,8 @@ public class UserResource {
         
         @PostMapping("/sendOTP")
         public ResponseEntity<OtpDTO>  generateOTP(@RequestBody OtpDTO otp) {
-        	
-         otp =	mailService.generateAndSendOTP(otp);
+        	String userLogin = SecurityUtils.getCurrentUserLogin().get();
+            otp =	mailService.generateAndSendOTP(otp);
         	
         	return new ResponseEntity<>(otp, HttpStatus.OK);
         }
@@ -197,7 +197,12 @@ public class UserResource {
             ResponseMessage rm = new ResponseMessage();
             if (user != null && user.getId() > 0) {
             	//UserDTO existingUser = userService.findOneByEmailIgnoreCase(resetPassword.getMail());
-               // mailService.sendPasswordResetMail( userService.userToUserDTOEmail(user));
+                try {
+					mailService.sendPasswordResetMail(user);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 rm.setResult(true);
                 rm.setMessage(" Password reset email sent to "+resetPassword.getMail());
             } else {
