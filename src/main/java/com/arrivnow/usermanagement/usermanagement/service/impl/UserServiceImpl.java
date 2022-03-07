@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.arrivnow.usermanagement.usermanagement.dto.OtpDTO;
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
 import com.arrivnow.usermanagement.usermanagement.exception.EmailAlreadyUsedException;
 import com.arrivnow.usermanagement.usermanagement.exception.InvalidPasswordException;
@@ -363,6 +364,23 @@ public class UserServiceImpl  implements UserService{
 		public UserDTO findOneByLogin(String userLogin) {
 			User user = userRepository.findOneByLogin(userLogin).get();
 			return  new UserDTO(user);
+		}
+
+		@Override
+		public OtpDTO validateOTP(OtpDTO otp) throws Exception {
+			User user = userRepository.findOneByMobile(otp.getMobile());
+			if(user.getMobile().equals(otp.getMobile()) && user.getOtp().equals(otp.getOtp())) {
+				otp.setOtpValidated(true);
+				user.setOtp(null);
+				
+				userRepository.save(user);
+				
+			}else {
+				otp.setOtpValidated(false);
+				throw new Exception("Otp not matched");
+				
+			}
+			return otp;
 		}
 	    
 	    

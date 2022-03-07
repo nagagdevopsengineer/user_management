@@ -161,7 +161,7 @@ public class MailService {
 		
 		String OtpSMS = env.getProperty("otp.sms");
 		
-		UserDTO user = userService.findOneByLogin(otp.getUserLogin());
+		UserDTO user = userService.findByMobile(otp.getMobile());
 		
 		if(user != null && user.getId() > 0) {
 			char[] otpc = RandomUtil.generateOTP();

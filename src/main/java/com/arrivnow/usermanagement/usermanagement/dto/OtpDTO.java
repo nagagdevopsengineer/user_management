@@ -12,7 +12,7 @@ public class OtpDTO {
 	private String app;
 	private String messageId;
 	private String userLogin;
-	
+	private boolean otpValidated;
 	
 
 }

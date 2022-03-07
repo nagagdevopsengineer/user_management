@@ -2,6 +2,7 @@ package com.arrivnow.usermanagement.usermanagement.service;
 
 import java.util.List;
 
+import com.arrivnow.usermanagement.usermanagement.dto.OtpDTO;
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
 
 public interface UserService {
@@ -33,6 +34,8 @@ public interface UserService {
 	  UserDTO findByMobile(Long mobile);
 
 	  UserDTO findOneByLogin(String userLogin);
+
+	  OtpDTO validateOTP(OtpDTO otp) throws Exception ;
 	  
 	  
 

@@ -131,8 +131,23 @@ public class UserResource {
         
         @PostMapping("/sendOTP")
         public ResponseEntity<OtpDTO>  generateOTP(@RequestBody OtpDTO otp) {
-        	String userLogin = SecurityUtils.getCurrentUserLogin().get();
+        	//String userLogin = SecurityUtils.getCurrentUserLogin().get();
             otp =	mailService.generateAndSendOTP(otp);
+        	
+        	return new ResponseEntity<>(otp, HttpStatus.OK);
+        }
+        
+        @PostMapping("/validateOTP")
+        public ResponseEntity<OtpDTO>  validateOTP(@RequestBody OtpDTO otp) {
+        	//String userLogin = SecurityUtils.getCurrentUserLogin().get();
+            try {
+				otp =	userService.validateOTP(otp);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				otp = new OtpDTO();
+				otp.setOtpValidated(false);
+			}
         	
         	return new ResponseEntity<>(otp, HttpStatus.OK);
         }
