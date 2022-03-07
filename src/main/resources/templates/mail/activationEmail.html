@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
+    <head>
+        <title >JHipster activation</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="icon" th:href="@{|${baseUrl}/favicon.ico|}" />
+    </head>
+    <body>
+        <p th:text="${user.firstName}">
+            Dear
+        </p>
+        <p >
+            Congratulations!! Your ArrivNow created, please click on the URL below to update your profile:
+              <p th:text="${user.webURL}"></p>
+            <div>Username :  <span th:text="${user.login}"></span></div>
+            <div>Password :   <span th:text="${user.password}"></span></div> 
+        </p>
+        <p>
+            <a th:href="${url}"
+            th:text="${url}">Activation link</a>
+        </p>
+        <p>
+            <span >Regards, </span>
+            <br/>
+            <em >ArrivNow</em>
+        </p>
+    </body>
+</html>

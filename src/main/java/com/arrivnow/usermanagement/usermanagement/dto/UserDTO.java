@@ -1,19 +1,29 @@
 package com.arrivnow.usermanagement.usermanagement.dto;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 
+import com.arrivnow.usermanagement.usermanagement.model.Authority;
 import com.arrivnow.usermanagement.usermanagement.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Data;
 
+@Data
 public class UserDTO {
 
+    @JsonIgnore
     private Long id;
+    
+    private String userId;
     
     private String login;
     
-    private String passwordHash;
+    @JsonIgnore
+    private String password;
     
     private String firstName;
     
@@ -23,7 +33,7 @@ public class UserDTO {
     
     private String imageUrl;
     
-    private Boolean activated;
+    private boolean activated;
     
     private String langKey;
     
@@ -35,8 +45,33 @@ public class UserDTO {
     
     private Date createdDate;
     
+    private String webURL;
+    
+    private Set<String> authorities;
+    
+    private Long otp;
+    
+    @JsonIgnore
+    private Long mobile;
+    
     public UserDTO(User user) {
+    	
+    	 System.out.println(" user aut "+user.getAuthorities());
+    	 Set<String> authorities =  new HashSet<String>(); 
+         for (Authority auth : user.getAuthorities()) {
+        	 authorities.add(auth.getName());
+         	
+ 		}
+         this.setAuthorities(authorities);
         BeanUtils.copyProperties(user, this);
+        this.setUserId(user.getUserId().toString());
+        
+       
+       
+    }
+    
+    public UserDTO() {
+        // Empty constructor needed for Jackson.
     }
 	
 }
