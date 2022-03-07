@@ -3,7 +3,6 @@ package com.arrivnow.usermanagement.usermanagement.dto;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 
@@ -19,7 +18,7 @@ public class UserDTO {
     @JsonIgnore
     private Long id;
     
-    private UUID userId;
+    private String userId;
     
     private String login;
     
@@ -65,6 +64,7 @@ public class UserDTO {
  		}
          this.setAuthorities(authorities);
         BeanUtils.copyProperties(user, this);
+        this.setUserId(user.getUserId().toString());
         
        
        
