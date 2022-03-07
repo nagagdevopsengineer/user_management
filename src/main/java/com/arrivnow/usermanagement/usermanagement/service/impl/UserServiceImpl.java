@@ -23,6 +23,7 @@ import com.arrivnow.usermanagement.usermanagement.repository.UserRepository;
 import com.arrivnow.usermanagement.usermanagement.security.AuthoritiesConstants;
 import com.arrivnow.usermanagement.usermanagement.security.SecurityUtils;
 import com.arrivnow.usermanagement.usermanagement.service.UserService;
+import com.arrivnow.usermanagement.usermanagement.util.PasswordUtil;
 import com.arrivnow.usermanagement.usermanagement.util.RandomUtil;
 
 
@@ -90,7 +91,16 @@ public class UserServiceImpl  implements UserService{
            
            
                     User newUser = new User();
-                    String encryptedPassword = passwordEncoder.encode(password);
+                    String encryptedPassword = "";
+                    
+                    if(userDTO.getPassword() != null && userDTO.getPassword().equalsIgnoreCase("TEMP")) {
+                        encryptedPassword = passwordEncoder.encode(password);
+                    }else {
+                    	password = PasswordUtil.generatePassayPassword();
+                    	encryptedPassword = passwordEncoder.encode(password);
+                    }
+                    
+                    
                     newUser.setLogin(userDTO.getLogin().toLowerCase());
                     // new user gets initially a generated password
                     newUser.setPassword(encryptedPassword);
