@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class OtpDTO {
-	@JsonIgnore
     private Long mobile;
 	private Long otp;
 	private String app;
