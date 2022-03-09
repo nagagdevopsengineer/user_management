@@ -156,39 +156,51 @@ public class MailService {
     }
 
     @Async
-	public OtpDTO generateAndSendOTP(OtpDTO otp) {
-		log.debug(" Sending OTP to mobile ",otp);
+	public OtpDTO generateAndSendOTP(OtpDTO otp) throws Exception {
+		System.out.println(" Sending OTP to mobile "+otp.getMobile());
 		
 		String OtpSMS = env.getProperty("otp.sms");
 		
 		UserDTO user = userService.findByMobile(otp.getMobile());
 		
-		if(user != null && user.getId() > 0) {
-			char[] otpc = RandomUtil.generateOTP();
-			String otps = new String(otpc);
-			otp.setOtp(Long.parseLong(otps));
-			otp.setMobile(user.getMobile());
+		if( user.getAuthorities().contains("ROLE_EMPLOYEE") 
+				|| user.getAuthorities().contains("ROLE_HELPER") 
+				|| user.getAuthorities().contains("ROLE_DRIVER") ) {
 			
-			OtpSMS = OtpSMS.replace("USERNAME", user.getFirstName());
-			OtpSMS = OtpSMS.replace("OTPN", otp.getOtp()+"");
-			if("DRIVER".equalsIgnoreCase(otp.getApp())) {
-				OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.dapp.hash"));
-			}else if ("EMPLOYEE".equalsIgnoreCase(otp.getApp())) {
-				OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.eapp.hash"));
+			if(user != null && user.getId() > 0) {
+				char[] otpc = RandomUtil.generateOTP();
+				String otps = new String(otpc);
+				otp.setOtp(Long.parseLong(otps));
+				otp.setMobile(user.getMobile());
+				
+				OtpSMS = OtpSMS.replace("USERNAME", user.getFirstName());
+				OtpSMS = OtpSMS.replace("OTPN", otp.getOtp()+"");
+				if("DRIVER".equalsIgnoreCase(otp.getApp())) {
+					OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.dapp.hash"));
+				}else if ("EMPLOYEE".equalsIgnoreCase(otp.getApp())) {
+					OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.eapp.hash"));
+				}
+				
+				
+				otp = sendOTP(otp,OtpSMS);
+				
+				user.setOtp(otp.getOtp());
+				
+				userService.updateUser(user);
+				
+			}else {
+				
+				throw new UsernameNotFoundException("User not exist with given mobile.");
+				
 			}
 			
 			
-			otp = sendOTP(otp,OtpSMS);
-			
-			user.setOtp(otp.getOtp());
-			
-			userService.updateUser(user);
-			
 		}else {
 			
-			throw new UsernameNotFoundException("User not exist with given mobile.");
-			
+			throw new Exception("Not Authorized");
 		}
+		
+		
 		
 		
 		

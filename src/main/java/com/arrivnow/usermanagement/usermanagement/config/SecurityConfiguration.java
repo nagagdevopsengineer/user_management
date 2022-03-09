@@ -2,7 +2,6 @@ package com.arrivnow.usermanagement.usermanagement.config;
 
 
 
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,10 +9,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
-import org.springframework.web.filter.CorsFilter;
-import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import com.arrivnow.usermanagement.usermanagement.security.AuthoritiesConstants;
 import com.arrivnow.usermanagement.usermanagement.security.jwt.JWTConfigurer;
@@ -21,18 +17,17 @@ import com.arrivnow.usermanagement.usermanagement.security.jwt.TokenProvider;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-@Import(SecurityProblemSupport.class)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
 
    // private final CorsFilter corsFilter;
-    private final SecurityProblemSupport problemSupport;
+   // private final SecurityProblemSupport problemSupport;
 
-    public SecurityConfiguration(TokenProvider tokenProvider, SecurityProblemSupport problemSupport) {
+    public SecurityConfiguration(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
         //this.corsFilter = corsFilter;
-        this.problemSupport = problemSupport;
+      //  this.problemSupport = problemSupport;
     }
 
     
@@ -52,8 +47,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .disable()
            // .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
-                .authenticationEntryPoint(problemSupport)
-                .accessDeniedHandler(problemSupport)
+               // .authenticationEntryPoint(problemSupport)
+               // .accessDeniedHandler(problemSupport)
         .and()
             .headers()
             .contentSecurityPolicy("default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:")

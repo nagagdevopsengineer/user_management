@@ -130,8 +130,7 @@ public class UserResource {
         }
         
         @PostMapping("/sendOTP")
-        public ResponseEntity<OtpDTO>  generateOTP(@RequestBody OtpDTO otp) {
-        	//String userLogin = SecurityUtils.getCurrentUserLogin().get();
+        public ResponseEntity<OtpDTO>  generateOTP(@RequestBody OtpDTO otp) throws Exception {
             otp =	mailService.generateAndSendOTP(otp);
         	
         	return new ResponseEntity<>(otp, HttpStatus.OK);

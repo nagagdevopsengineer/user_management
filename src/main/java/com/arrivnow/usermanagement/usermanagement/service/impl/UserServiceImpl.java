@@ -347,16 +347,15 @@ public class UserServiceImpl  implements UserService{
 		public UserDTO getUserWithAuthoritiesByLogin(String userLogin) {
 			User user = userRepository.findOneByLogin(userLogin).get();
 			
-			System.out.println("asd as d as d "+user.getEmail());
-			
-			System.out.println("asd as    qsdsa  d as d "+user.getLogin());
 			
 			return new UserDTO(user);
 		}
 
 		@Override
 		public UserDTO findByMobile(Long mobile) {
-			User user = userRepository.findOneByMobile(mobile);
+			User user = userRepository.findOneWithAuthoritiesByMobile(mobile).get();
+			System.out.println(" User  "+user.toString());
+			System.out.println(" User 2 "+user.getAuthorities());
 			return new UserDTO(user);
 		}
 
@@ -368,7 +367,7 @@ public class UserServiceImpl  implements UserService{
 
 		@Override
 		public OtpDTO validateOTP(OtpDTO otp) throws Exception {
-			User user = userRepository.findOneByMobile(otp.getMobile());
+			User user = userRepository.findOneWithAuthoritiesByMobile(otp.getMobile()).get();
 			if(user.getMobile().equals(otp.getMobile()) && user.getOtp().equals(otp.getOtp())) {
 				otp.setOtpValidated(true);
 				user.setOtp(null);

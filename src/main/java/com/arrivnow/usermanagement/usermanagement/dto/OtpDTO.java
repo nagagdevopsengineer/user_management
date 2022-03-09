@@ -1,7 +1,5 @@
 package com.arrivnow.usermanagement.usermanagement.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 
 @Data
