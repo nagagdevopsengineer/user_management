@@ -30,11 +30,13 @@ import com.arrivnow.usermanagement.usermanagement.dto.ResetPassword;
 import com.arrivnow.usermanagement.usermanagement.dto.ResponseMessage;
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
 import com.arrivnow.usermanagement.usermanagement.exception.InvalidPasswordException;
+import com.arrivnow.usermanagement.usermanagement.resources.vm.AuthenticateVM;
 import com.arrivnow.usermanagement.usermanagement.resources.vm.KeyAndPasswordVM;
 import com.arrivnow.usermanagement.usermanagement.resources.vm.LoginVM;
 import com.arrivnow.usermanagement.usermanagement.resources.vm.ManagedUserVM;
 import com.arrivnow.usermanagement.usermanagement.security.SecurityUtils;
 import com.arrivnow.usermanagement.usermanagement.security.jwt.JWTFilter;
+import com.arrivnow.usermanagement.usermanagement.security.jwt.JWTToken;
 import com.arrivnow.usermanagement.usermanagement.security.jwt.TokenProvider;
 import com.arrivnow.usermanagement.usermanagement.service.UserService;
 import com.arrivnow.usermanagement.usermanagement.service.impl.MailService;
@@ -115,18 +117,19 @@ public class UserResource {
         
         
         @PostMapping("/authenticate")
-        public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM) {
+        public ResponseEntity<AuthenticateVM> authorize(@Valid @RequestBody LoginVM loginVM) {
 
             UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
-
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
             String jwt = tokenProvider.createToken(authentication, rememberMe);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-            return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
+            UserDTO user = userService.findOneByLogin(loginVM.getUsername());
+            return new ResponseEntity<>(new AuthenticateVM(new JWTToken(jwt),
+            		user.getUserId(),user.getAuthorities()) , httpHeaders, HttpStatus.OK);
         }
         
         @PostMapping("/sendOTP")
@@ -260,26 +263,6 @@ public class UserResource {
         }
 
         
-        /**
-         * Object to return as body in JWT Authentication.
-         */
-        static class JWTToken {
-
-            private String idToken;
-
-            JWTToken(String idToken) {
-                this.idToken = idToken;
-            }
-
-            @JsonProperty("id_token")
-            String getIdToken() {
-                return idToken;
-            }
-
-            void setIdToken(String idToken) {
-                this.idToken = idToken;
-            }
-        }
         
         
         
