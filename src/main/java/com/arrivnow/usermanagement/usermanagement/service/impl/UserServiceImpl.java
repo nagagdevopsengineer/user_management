@@ -116,6 +116,7 @@ public class UserServiceImpl  implements UserService{
                     newUser.setActivated(true);
                     // new user gets registration key
                     newUser.setActivationKey(RandomUtil.generateActivationKey());
+                    newUser.setMobile(userDTO.getMobile());
                     
                     newUser.setUserId(UUID.randomUUID());
                     HashSet<Authority> authorities = new HashSet<>();
