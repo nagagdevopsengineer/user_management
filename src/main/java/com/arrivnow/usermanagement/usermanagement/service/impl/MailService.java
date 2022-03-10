@@ -159,7 +159,7 @@ public class MailService {
 	public OtpDTO generateAndSendOTP(OtpDTO otp) throws Exception {
 		System.out.println(" Sending OTP to mobile "+otp.getMobile());
 		
-		String OtpSMS = env.getProperty("otp.sms");
+		String OtpSMS = "Dear USERNAME, Your OTP for ArrivNow is OTPN Use this to login . AppHashKey .";//env.getProperty("otp.sms");
 		
 		UserDTO user = userService.findByMobile(otp.getMobile());
 		
