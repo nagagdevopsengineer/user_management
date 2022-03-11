@@ -49,7 +49,8 @@ public class WebConfigurer implements ServletContextInitializer {
         config.setAllowedOrigins(ImmutableList.of("*"));  //set access from all domains
         config.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));
+        config.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", 
+        		"Content-Type","Access-Control-Allow-Origin"));
 
         if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
             log.debug("Registering CORS filter");
