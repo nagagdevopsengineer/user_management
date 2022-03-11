@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ import com.arrivnow.usermanagement.usermanagement.model.Authority;
 import com.arrivnow.usermanagement.usermanagement.model.User;
 import com.arrivnow.usermanagement.usermanagement.repository.AuthorityRepository;
 import com.arrivnow.usermanagement.usermanagement.repository.UserRepository;
-import com.arrivnow.usermanagement.usermanagement.security.AuthoritiesConstants;
 import com.arrivnow.usermanagement.usermanagement.security.SecurityUtils;
 import com.arrivnow.usermanagement.usermanagement.service.UserService;
 import com.arrivnow.usermanagement.usermanagement.util.PasswordUtil;
@@ -40,13 +40,17 @@ public class UserServiceImpl  implements UserService{
     private final PasswordEncoder passwordEncoder;
     
     private final AuthorityRepository authorityRepository;
+    
+    private final  ModelMapper modelMapper;
+    
     @Autowired
     public UserServiceImpl(
     		UserRepository userRepository,PasswordEncoder passwordEncoder,
-    		AuthorityRepository authorityRepository) {
+    		AuthorityRepository authorityRepository,ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.modelMapper = modelMapper;
     }    
 
 	@Override
@@ -246,7 +250,8 @@ public class UserServiceImpl  implements UserService{
              user.setImageUrl(userDTO.getImageUrl());
              user.setActivated(userDTO.isActivated());
              user.setLangKey(userDTO.getLangKey());
-             
+             user.setOtp(userDTO.getOtp());
+             user.setMobile(userDTO.getMobile());
              Set<Authority> managedAuthorities = user.getAuthorities();
              managedAuthorities.clear();
 	         
@@ -367,17 +372,17 @@ public class UserServiceImpl  implements UserService{
 		}
 
 		@Override
-		public OtpDTO validateOTP(OtpDTO otp) throws Exception {
-			User user = userRepository.findOneWithAuthoritiesByMobile(otp.getMobile()).get();
-			if(user.getMobile().equals(otp.getMobile()) && user.getOtp().equals(otp.getOtp())) {
+		public OtpDTO validateOTP(OtpDTO otp,UserDTO userDto) throws Exception {
+			if((userDto.getMobile().equals(otp.getMobile())) && (userDto.getOtp().equals(otp.getOtp()))) {
 				otp.setOtpValidated(true);
+				User user  = userRepository.findById(userDto.getId()).get();
 				user.setOtp(null);
-				
 				userRepository.save(user);
 				
 			}else {
 				otp.setOtpValidated(false);
 				throw new Exception("Otp not matched");
+				
 				
 			}
 			return otp;

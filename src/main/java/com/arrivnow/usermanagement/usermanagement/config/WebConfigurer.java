@@ -3,6 +3,7 @@ package com.arrivnow.usermanagement.usermanagement.config;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -61,6 +62,11 @@ public class WebConfigurer implements ServletContextInitializer {
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
+    }
+    
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
 }

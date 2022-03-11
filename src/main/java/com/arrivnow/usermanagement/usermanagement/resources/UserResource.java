@@ -2,6 +2,7 @@ package com.arrivnow.usermanagement.usermanagement.resources;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
@@ -40,7 +41,6 @@ import com.arrivnow.usermanagement.usermanagement.security.jwt.JWTToken;
 import com.arrivnow.usermanagement.usermanagement.security.jwt.TokenProvider;
 import com.arrivnow.usermanagement.usermanagement.service.UserService;
 import com.arrivnow.usermanagement.usermanagement.service.impl.MailService;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @RestController
 @RequestMapping("users")
@@ -134,16 +134,30 @@ public class UserResource {
         
         @PostMapping("/sendOTP")
         public ResponseEntity<OtpDTO>  generateOTP(@RequestBody OtpDTO otp) throws Exception {
+        	
             otp =	mailService.generateAndSendOTP(otp);
+        	
+        		
         	
         	return new ResponseEntity<>(otp, HttpStatus.OK);
         }
         
         @PostMapping("/validateOTP")
-        public ResponseEntity<OtpDTO>  validateOTP(@RequestBody OtpDTO otp) {
+        public ResponseEntity<AuthenticateVM>  validateOTP(@RequestBody OtpDTO otp) {
         	//String userLogin = SecurityUtils.getCurrentUserLogin().get();
             try {
-				otp =	userService.validateOTP(otp);
+            	
+            	UserDTO useDTO = userService.findByMobile(otp.getMobile());
+            	boolean isRememberMe = false;
+				otp =	userService.validateOTP(otp,useDTO);
+				
+				if(otp.isOtpValidated()) {
+					
+			            return new ResponseEntity<>(new AuthenticateVM(null,
+			            		useDTO.getUserId(),useDTO.getAuthorities()) , null, HttpStatus.OK);
+					
+				}
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -151,7 +165,7 @@ public class UserResource {
 				otp.setOtpValidated(false);
 			}
         	
-        	return new ResponseEntity<>(otp, HttpStatus.OK);
+        	return null;
         }
         
         /**

@@ -35,7 +35,7 @@ public interface UserService {
 
 	  UserDTO findOneByLogin(String userLogin);
 
-	  OtpDTO validateOTP(OtpDTO otp) throws Exception ;
+	  OtpDTO validateOTP(OtpDTO otp, UserDTO useDTO) throws Exception ;
 	  
 	  
 

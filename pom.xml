@@ -176,7 +176,13 @@
             <version>1.6.4</version>
         </dependency>
 
-
+        <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+			<dependency>
+			    <groupId>org.modelmapper</groupId>
+			    <artifactId>modelmapper</artifactId>
+			    <version>3.1.0</version>
+			</dependency>
+        
 
 
         <!-- Thanks for using https://jar-download.com -->

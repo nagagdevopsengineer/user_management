@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.mail.MailException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -47,8 +48,8 @@ public class MailService {
 
     //private final JavaMailSender javaMailSender;
 
-    private final MessageSource messageSource;
-
+    private final PasswordEncoder passwordEncoder;
+    
     private final SpringTemplateEngine templateEngine;
     
     private final Environment env;
@@ -61,15 +62,17 @@ public class MailService {
         MessageSource messageSource,
         SpringTemplateEngine templateEngine,
         Environment env,
-        UserService userService
+        UserService userService,
+        PasswordEncoder passwordEncoder
         
     ) {
        // this.jHipsterProperties = jHipsterProperties;
        // this.javaMailSender = javaMailSender;
-        this.messageSource = messageSource;
+       // this.messageSource = messageSource;
         this.templateEngine = templateEngine;
         this.env = env;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Async
@@ -159,15 +162,15 @@ public class MailService {
 	public OtpDTO generateAndSendOTP(OtpDTO otp) throws Exception {
 		System.out.println(" Sending OTP to mobile "+otp.getMobile());
 		
-		String OtpSMS = "Dear USERNAME, Your OTP for ArrivNow is OTPN Use this to login . AppHashKey .";//env.getProperty("otp.sms");
+		String OtpSMS = env.getProperty("otp.sms");
 		
 		UserDTO user = userService.findByMobile(otp.getMobile());
-		
+		if(user != null && user.getId() > 0) {
 		if( user.getAuthorities().contains("ROLE_EMPLOYEE") 
 				|| user.getAuthorities().contains("ROLE_HELPER") 
 				|| user.getAuthorities().contains("ROLE_DRIVER") ) {
 			
-			if(user != null && user.getId() > 0) {
+			
 				char[] otpc = RandomUtil.generateOTP();
 				String otps = new String(otpc);
 				otp.setOtp(Long.parseLong(otps));
@@ -186,13 +189,9 @@ public class MailService {
 				
 				user.setOtp(otp.getOtp());
 				
+				
 				userService.updateUser(user);
 				
-			}else {
-				
-				throw new UsernameNotFoundException("User not exist with given mobile.");
-				
-			}
 			
 			
 		}else {
@@ -200,6 +199,11 @@ public class MailService {
 			throw new Exception("Not Authorized");
 		}
 		
+		}else {
+			
+			throw new UsernameNotFoundException("User not exist with given mobile.");
+			
+		}
 		
 		
 		
