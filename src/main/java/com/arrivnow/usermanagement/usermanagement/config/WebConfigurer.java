@@ -16,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * Configuration of web application with Servlet 3.0 APIs.
  */
@@ -44,11 +46,22 @@ public class WebConfigurer implements ServletContextInitializer {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(ImmutableList.of("*"));  //set access from all domains
+        config.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
+        config.setAllowCredentials(true);
+        config.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));
+
         if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
             log.debug("Registering CORS filter");
             source.registerCorsConfiguration("/api/**", config);
             source.registerCorsConfiguration("/management/**", config);
-            source.registerCorsConfiguration("/v2/api-docs", config);
+            source.registerCorsConfiguration("/v3/api-docs", config);
+            source.registerCorsConfiguration("/swagger-ui/**", config);
+            source.registerCorsConfiguration("/*/api/**", config);
+            source.registerCorsConfiguration("/services/*/api/**", config);
+            source.registerCorsConfiguration("/*/management/**", config);
+            
+            
         }
         return new CorsFilter(source);
     }

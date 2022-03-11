@@ -12,12 +12,15 @@ public class AuthenticateVM {
 	
 	private Set<String> roles;
 	
+	private boolean otpValidated;
 	
-	public AuthenticateVM(JWTToken token,String userId,Set<String> roles){
+	
+	public AuthenticateVM(JWTToken token,String userId,Set<String> roles,boolean otpValidated){
 		
 		this.token = token;
 		this.userId = userId;
 		this.roles = roles;
+		this.otpValidated = otpValidated;
 		
 	}
 	
@@ -40,6 +43,14 @@ public class AuthenticateVM {
 
 	public void setRoles(Set<String> roles) {
 		this.roles = roles;
+	}
+
+	public boolean isOtpValidated() {
+		return otpValidated;
+	}
+
+	public void setOtpValidated(boolean otpValidated) {
+		this.otpValidated = otpValidated;
 	}
 	
 	

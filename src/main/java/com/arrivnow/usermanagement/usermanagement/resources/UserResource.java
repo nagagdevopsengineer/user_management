@@ -2,7 +2,6 @@ package com.arrivnow.usermanagement.usermanagement.resources;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
@@ -129,7 +128,7 @@ public class UserResource {
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
             UserDTO user = userService.findOneByLogin(loginVM.getUsername());
             return new ResponseEntity<>(new AuthenticateVM(new JWTToken(jwt),
-            		user.getUserId(),user.getAuthorities()) , httpHeaders, HttpStatus.OK);
+            		user.getUserId(),user.getAuthorities(),true) , httpHeaders, HttpStatus.OK);
         }
         
         @PostMapping("/sendOTP")
@@ -154,8 +153,12 @@ public class UserResource {
 				if(otp.isOtpValidated()) {
 					
 			            return new ResponseEntity<>(new AuthenticateVM(null,
-			            		useDTO.getUserId(),useDTO.getAuthorities()) , null, HttpStatus.OK);
+			            		useDTO.getUserId(),useDTO.getAuthorities(),true) , null, HttpStatus.OK);
 					
+				}else {
+					otp.setOtpValidated(false);
+					return new ResponseEntity<>(new AuthenticateVM(null,
+		            		null,null,false) , null, HttpStatus.NOT_ACCEPTABLE);
 				}
 				
 			} catch (Exception e) {
@@ -163,9 +166,11 @@ public class UserResource {
 				e.printStackTrace();
 				otp = new OtpDTO();
 				otp.setOtpValidated(false);
+				return new ResponseEntity<>(new AuthenticateVM(null,
+	            		null,null,false) , null, HttpStatus.NOT_ACCEPTABLE);
 			}
         	
-        	return null;
+        	//return null;
         }
         
         /**
