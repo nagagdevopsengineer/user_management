@@ -360,8 +360,6 @@ public class UserServiceImpl  implements UserService{
 		@Override
 		public UserDTO findByMobile(Long mobile) {
 			User user = userRepository.findOneWithAuthoritiesByMobile(mobile).get();
-			System.out.println(" User  "+user.toString());
-			System.out.println(" User 2 "+user.getAuthorities());
 			return new UserDTO(user);
 		}
 

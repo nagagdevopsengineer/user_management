@@ -178,9 +178,9 @@ public class MailService {
 				
 				OtpSMS = OtpSMS.replace("USERNAME", user.getFirstName());
 				OtpSMS = OtpSMS.replace("OTPN", otp.getOtp()+"");
-				if("DRIVER".equalsIgnoreCase(otp.getApp())) {
+				if(user.getAuthorities().contains("ROLE_HELPER") || user.getAuthorities().contains("ROLE_DRIVER")) {
 					OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.dapp.hash"));
-				}else if ("EMPLOYEE".equalsIgnoreCase(otp.getApp())) {
+				}else if (user.getAuthorities().contains("ROLE_EMPLOYEE")) {
 					OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.eapp.hash"));
 				}
 				
