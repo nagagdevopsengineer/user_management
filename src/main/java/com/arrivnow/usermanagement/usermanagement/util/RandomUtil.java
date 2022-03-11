@@ -60,16 +60,11 @@ public final class RandomUtil {
     
     public static char[] generateOTP() {
     	
-    	String numbers = "0123456789";
-    	Random rndm_method = new Random();
-    	char[] otp = new char[6];
-    	for (int i = 0; i < 6; i++)
-        {
-             otp[i] =
-             numbers.charAt(rndm_method.nextInt(numbers.length()));
-        }
-    	
-    	 return otp;
+    	 Random rnd = new Random();
+    	    int number = rnd.nextInt(999999);
+    	    String otpStr = String.format("%06d", number);
+    	 return otpStr.toCharArray();
     	
     }
+
 }
