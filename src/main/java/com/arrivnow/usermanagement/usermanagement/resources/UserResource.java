@@ -3,6 +3,7 @@ package com.arrivnow.usermanagement.usermanagement.resources;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +41,8 @@ import com.arrivnow.usermanagement.usermanagement.security.jwt.JWTToken;
 import com.arrivnow.usermanagement.usermanagement.security.jwt.TokenProvider;
 import com.arrivnow.usermanagement.usermanagement.service.UserService;
 import com.arrivnow.usermanagement.usermanagement.service.impl.MailService;
+
+import io.micrometer.core.annotation.Timed;
 
 @RestController
 @RequestMapping("users")
@@ -117,13 +120,16 @@ public class UserResource {
         
         @PostMapping("/authenticate")
         public ResponseEntity<AuthenticateVM> authorize(@Valid @RequestBody LoginVM loginVM) {
-
+            System.out.println(loginVM.getUsername()+" user   "+loginVM.getPassword());
             UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            		 System.out.println(loginVM.getUsername()+" token   "+loginVM.getPassword());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println(loginVM.getUsername()+" security context   "+loginVM.getPassword());
             boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
             String jwt = tokenProvider.createToken(authentication, rememberMe);
+            System.out.println(loginVM.getUsername()+" jwt   "+loginVM.getPassword());
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
             UserDTO user = userService.findOneByLogin(loginVM.getUsername());
@@ -282,7 +288,18 @@ public class UserResource {
         }
 
         
-        
+        /**
+         * GET  /authenticate : check if the user is authenticated, and return its login.
+         *
+         * @param request the HTTP request
+         * @return the login if the user is authenticated
+         */
+        @GetMapping("/authenticate")
+        @Timed
+        public String isAuthenticated(HttpServletRequest request) {
+            log.debug("REST request to check if the current user is authenticated");
+            return request.getRemoteUser();
+        }
         
         
 

@@ -98,7 +98,7 @@ public class UserServiceImpl  implements UserService{
                     User newUser = new User();
                     String encryptedPassword = "";
                     
-                    if(userDTO.getPassword() != null && userDTO.getPassword().equalsIgnoreCase("TEMP")) {
+                    if(userDTO.getPassword() != null && !userDTO.getPassword().equalsIgnoreCase("TEMP")) {
                         encryptedPassword = passwordEncoder.encode(password);
                     }else {
                     	password = PasswordUtil.generatePassayPassword();
