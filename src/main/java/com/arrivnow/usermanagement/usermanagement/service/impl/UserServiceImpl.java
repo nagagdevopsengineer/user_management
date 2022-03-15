@@ -98,10 +98,12 @@ public class UserServiceImpl  implements UserService{
                     User newUser = new User();
                     String encryptedPassword = "";
                     
-                    if(userDTO.getPassword() != null && !userDTO.getPassword().equalsIgnoreCase("TEMP")) {
-                        encryptedPassword = passwordEncoder.encode(password);
-                    }else {
+                    if(password != null && password.equalsIgnoreCase("TEMP")) {
                     	password = PasswordUtil.generatePassayPassword();
+                    	encryptedPassword = passwordEncoder.encode(password);
+                    	System.out.println( " Setting genersted password  "+password );
+                    }else {
+                    	System.out.println( " Setting request password  " +password);
                     	encryptedPassword = passwordEncoder.encode(password);
                     }
                     
@@ -140,7 +142,7 @@ public class UserServiceImpl  implements UserService{
                     
                     UserDTO userD = new UserDTO(newUser);
                     
-                    userD.setPassword(password);
+                    userD.setPasswrd(password);
                     
                     return  userD;
                     

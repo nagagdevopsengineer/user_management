@@ -23,7 +23,7 @@ public class UserDTO {
     private String login;
     
     @JsonIgnore
-    private String password;
+    private String passwrd;
     
     private String firstName;
     
