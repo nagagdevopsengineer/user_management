@@ -9,16 +9,29 @@
         <p th:text="${user.firstName}">
             Dear
         </p>
-        <p >
-            Congratulations!! Your ArrivNow created, please click on the URL below to update your profile:
+        
+        <div th:if="${user.isDownloadOrLogin} == false">
+           <p th:text="#{email.activation.text1}" >
+            For your JHipster account a password reset was requested, please click on the URL below to reset it:
+          </p>
               <p th:text="${user.webURL}"></p>
             <div>Username :  <span th:text="${user.login}"></span></div>
             <div>Password :   <span th:text="${user.passwrd}"></span></div> 
-        </p>
+
         <p>
             <a th:href="${url}"
             th:text="${url}">Activation link</a>
         </p>
+        </div>
+        
+         <div th:if="${user.isDownloadOrLogin}">
+           <p th:text="#{email.activation.emp}" >
+            For your JHipster account a password reset was requested, please click on the URL below to reset it:
+          </p>
+              <p th:text="${user.webURL}"></p>
+            
+        
+        </div>
         <p>
             <span >Regards, </span>
             <br/>

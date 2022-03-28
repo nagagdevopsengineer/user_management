@@ -53,6 +53,8 @@ public class UserDTO {
     
     private Long mobile;
     
+    private Boolean isDownloadOrLogin;
+    
     public UserDTO(User user) {
     	
     	 System.out.println(" user aut "+user.getAuthorities());

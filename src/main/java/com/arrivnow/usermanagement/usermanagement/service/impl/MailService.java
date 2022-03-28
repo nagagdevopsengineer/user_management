@@ -143,7 +143,23 @@ public class MailService {
     @Async
     public void sendActivationEmail(UserDTO user) throws IOException {
         log.debug("Sending activation email to '{}'", user.getEmail());
-        user.setWebURL(messageSource.getMessage("email.app.url",null,null));
+        if( user.getAuthorities().contains("ROLE_EMPLOYEE") 
+				) {
+        	
+        	user.setWebURL(messageSource.getMessage("app.emp.download.link",null,null));
+        	user.setIsDownloadOrLogin(true);
+        	
+        }else if(user.getAuthorities().contains("ROLE_HELPER") 
+				|| user.getAuthorities().contains("ROLE_DRIVER")){
+        	user.setWebURL(messageSource.getMessage("app.driver.download.link",null,null));
+        	user.setIsDownloadOrLogin(true);
+        }
+        else {
+        	user.setWebURL(messageSource.getMessage("email.app.url",null,null));
+        	user.setIsDownloadOrLogin(false);
+        	
+        }
+        
         sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
     }
 
