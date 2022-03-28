@@ -1,5 +1,7 @@
 package com.arrivnow.usermanagement.usermanagement.config;
 
+import java.util.Locale;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -50,7 +52,8 @@ public class WebConfigurer implements ServletContextInitializer,WebMvcConfigurer
         ReloadableResourceBundleMessageSource messageSource
           = new ReloadableResourceBundleMessageSource();
         
-        messageSource.setBasename("classpath:messages");
+        messageSource.setBasename("classpath:/i18n/messages");
+       // messageSource.setDefaultLocale(Locale.ENGLISH);
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }

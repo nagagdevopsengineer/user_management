@@ -184,7 +184,7 @@ public class UserServiceImpl  implements UserService{
 	 @Transactional
 	    public UserDTO requestPasswordReset(String mail) {
 	      User user =  userRepository
-	            .findOneByEmailIgnoreCase(mail).get();
+	            .findOneByEmailIgnoreCase(mail.trim()).get();
 	            
 	                user.setResetKey(RandomUtil.generateResetKey());
 	                user.setResetDate(Instant.now());

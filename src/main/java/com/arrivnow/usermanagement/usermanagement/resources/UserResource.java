@@ -88,10 +88,7 @@ public class UserResource {
 	    @ResponseStatus(HttpStatus.CREATED)
 	    public ResponseEntity<UserDTO>  registerUser(@RequestBody ManagedUserVM managedUserVM) {
 	    	
-	    	System.out.println(managedUserVM.getFirstName()+" Password  "+managedUserVM.getPassword());
-	    	//if (!checkPasswordLength(managedUserVM.getPassword())) {
-	         //   throw new InvalidPasswordException();
-	       // }
+	    	
 	        UserDTO user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
 	        try {
 				mailService.sendActivationEmail(user);
@@ -219,7 +216,7 @@ public class UserResource {
          * @param passwordChangeDto current and new password.
          * @throws InvalidPasswordException {@code 400 (Bad Request)} if the new password is incorrect.
          */
-        @PostMapping(path = "change-password")
+        @PostMapping(path = "/change-password")
         public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
             if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
                 throw new InvalidPasswordException();
@@ -233,7 +230,7 @@ public class UserResource {
          *
          * @param mail the mail of the user.
          */
-        @PostMapping(path = "/account/reset-password/init")
+        @PostMapping(path = "/reset-password/init")
         public ResponseEntity<ResponseMessage> requestPasswordReset(@RequestBody ResetPassword resetPassword) {
            UserDTO user = userService.requestPasswordReset(resetPassword.getMail());
             ResponseMessage rm = new ResponseMessage();
@@ -266,7 +263,7 @@ public class UserResource {
          * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
          * @throws RuntimeException {@code 500 (Internal Server Error)} if the password could not be reset.
          */
-        @PostMapping(path = "/account/reset-password/finish")
+        @PostMapping(path = "/reset-password/finish")
         public ResponseEntity<ResponseMessage>  finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
         	 ResponseMessage rm = new ResponseMessage();
             if (!checkPasswordLength(keyAndPassword.getNewPassword())) {

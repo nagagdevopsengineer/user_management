@@ -45,7 +45,7 @@ public class MailService {
     private static final String BASE_URL = "baseUrl";
 
 
-    //private final JavaMailSender javaMailSender;
+    private final  MessageSource messageSource;
 
     private final PasswordEncoder passwordEncoder;
     
@@ -72,6 +72,7 @@ public class MailService {
         this.env = env;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.messageSource = messageSource;
     }
 
     @Async
@@ -130,18 +131,19 @@ public class MailService {
         }
         Locale locale = Locale.forLanguageTag("en");
         Context context = new Context(locale);
-        user.setWebURL("http://arrivnow.vapprtech.com");
+        //user.setWebURL(messageSource.getMessage("email.app.url",null,null));
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, "http://arrivnow.vapprtech.com");
+        context.setVariable(BASE_URL, messageSource.getMessage("email.app.url",null,null));
         String content = templateEngine.process(templateName, context);
-        System.out.println("  Sending email  ==>> ");
-       // String subject = messageSource.getMessage(titleKey, null, null);
-        sendEmail(user.getEmail(), "ArriveNow Account Created !! ", content, false, true);
+        System.out.println("  Sending email  ==>> "+ messageSource.getMessage(titleKey, null, null));
+        String subject = messageSource.getMessage(titleKey, null, null);
+        sendEmail(user.getEmail(), subject, content, false, true);
     }
 
     @Async
     public void sendActivationEmail(UserDTO user) throws IOException {
         log.debug("Sending activation email to '{}'", user.getEmail());
+        user.setWebURL(messageSource.getMessage("email.app.url",null,null));
         sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
     }
 
@@ -154,6 +156,7 @@ public class MailService {
     @Async
     public void sendPasswordResetMail(UserDTO user) throws IOException {
         log.debug("Sending password reset email to '{}'", user.getEmail());
+        user.setWebURL(messageSource.getMessage("email.app.signup.url",null,null)+"key="+user.getActivationKey());
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
     }
 
