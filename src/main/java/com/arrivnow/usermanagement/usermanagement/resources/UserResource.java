@@ -31,6 +31,7 @@ import com.arrivnow.usermanagement.usermanagement.dto.ResetPassword;
 import com.arrivnow.usermanagement.usermanagement.dto.ResponseMessage;
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
 import com.arrivnow.usermanagement.usermanagement.exception.InvalidPasswordException;
+import com.arrivnow.usermanagement.usermanagement.resources.errors.LoginAlreadyUsedException;
 import com.arrivnow.usermanagement.usermanagement.resources.vm.AuthenticateVM;
 import com.arrivnow.usermanagement.usermanagement.resources.vm.KeyAndPasswordVM;
 import com.arrivnow.usermanagement.usermanagement.resources.vm.LoginVM;
@@ -87,6 +88,11 @@ public class UserResource {
 	    @PostMapping("/register")
 	    @ResponseStatus(HttpStatus.CREATED)
 	    public ResponseEntity<UserDTO>  registerUser(@RequestBody ManagedUserVM managedUserVM) {
+	    	
+	    	if(userService.checkUserExist(managedUserVM)) {
+	    		
+	    		 throw new LoginAlreadyUsedException();
+	    	}
 	    	
 	    	
 	        UserDTO user = userService.registerUser(managedUserVM, managedUserVM.getPassword());

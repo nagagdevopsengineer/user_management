@@ -22,6 +22,8 @@ import com.arrivnow.usermanagement.usermanagement.model.Authority;
 import com.arrivnow.usermanagement.usermanagement.model.User;
 import com.arrivnow.usermanagement.usermanagement.repository.AuthorityRepository;
 import com.arrivnow.usermanagement.usermanagement.repository.UserRepository;
+import com.arrivnow.usermanagement.usermanagement.resources.errors.LoginAlreadyUsedException;
+import com.arrivnow.usermanagement.usermanagement.resources.vm.ManagedUserVM;
 import com.arrivnow.usermanagement.usermanagement.security.SecurityUtils;
 import com.arrivnow.usermanagement.usermanagement.service.UserService;
 import com.arrivnow.usermanagement.usermanagement.util.PasswordUtil;
@@ -386,6 +388,17 @@ public class UserServiceImpl  implements UserService{
 				
 			}
 			return otp;
+		}
+
+		@Override
+		public Boolean checkUserExist(ManagedUserVM managedUserVM) {
+			List<User> currentUsers = userRepository.findByEmailOrMobile(managedUserVM.getEmail(),managedUserVM.getMobile());
+			
+			if(currentUsers != null && currentUsers.size() > 0 ) {
+				return true;
+			}
+			
+			return false;
 		}
 	    
 	    

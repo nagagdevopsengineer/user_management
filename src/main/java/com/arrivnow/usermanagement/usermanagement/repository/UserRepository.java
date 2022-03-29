@@ -1,5 +1,6 @@
 package com.arrivnow.usermanagement.usermanagement.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -29,5 +30,8 @@ public interface UserRepository extends JpaRepository<User, Long>,JpaSpecificati
     
     @EntityGraph(attributePaths = "authorities")
     Optional<User> findOneWithAuthoritiesByMobile(Long mobile);
+
+    @EntityGraph(attributePaths = "authorities")
+	List<User> findByEmailOrMobile(String email, Long mobile);
 
 }

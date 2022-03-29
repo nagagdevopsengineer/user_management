@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.arrivnow.usermanagement.usermanagement.dto.OtpDTO;
 import com.arrivnow.usermanagement.usermanagement.dto.UserDTO;
+import com.arrivnow.usermanagement.usermanagement.resources.vm.ManagedUserVM;
 
 public interface UserService {
 	
@@ -36,6 +37,8 @@ public interface UserService {
 	  UserDTO findOneByLogin(String userLogin);
 
 	  OtpDTO validateOTP(OtpDTO otp, UserDTO useDTO) throws Exception ;
+
+	  Boolean checkUserExist(ManagedUserVM managedUserVM);
 	  
 	  
 
