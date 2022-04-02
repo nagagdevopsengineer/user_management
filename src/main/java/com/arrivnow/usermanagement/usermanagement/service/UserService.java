@@ -39,6 +39,8 @@ public interface UserService {
 	  OtpDTO validateOTP(OtpDTO otp, UserDTO useDTO) throws Exception ;
 
 	  Boolean checkUserExist(ManagedUserVM managedUserVM);
+
+	  String getOTP(Long mobile);
 	  
 	  
 

@@ -22,7 +22,6 @@ import com.arrivnow.usermanagement.usermanagement.model.Authority;
 import com.arrivnow.usermanagement.usermanagement.model.User;
 import com.arrivnow.usermanagement.usermanagement.repository.AuthorityRepository;
 import com.arrivnow.usermanagement.usermanagement.repository.UserRepository;
-import com.arrivnow.usermanagement.usermanagement.resources.errors.LoginAlreadyUsedException;
 import com.arrivnow.usermanagement.usermanagement.resources.vm.ManagedUserVM;
 import com.arrivnow.usermanagement.usermanagement.security.SecurityUtils;
 import com.arrivnow.usermanagement.usermanagement.service.UserService;
@@ -171,7 +170,9 @@ public class UserServiceImpl  implements UserService{
 	 @Transactional
 	    public UserDTO completePasswordReset(String newPassword, String key) {
 	      User user =   userRepository
-	            .findOneByResetKey(key);
+	            .findOneByResetKey(key.trim()).get();
+	      
+	      
 	      user.setPassword(passwordEncoder.encode(newPassword));
           user.setResetKey(null);
           user.setResetDate(null); 
@@ -185,13 +186,20 @@ public class UserServiceImpl  implements UserService{
 	 
 	 @Transactional
 	    public UserDTO requestPasswordReset(String mail) {
-	      User user =  userRepository
-	            .findOneByEmailIgnoreCase(mail.trim()).get();
-	            
-	                user.setResetKey(RandomUtil.generateResetKey());
-	                user.setResetDate(Instant.now());
-	                user = userRepository.save(user);
-	                return new UserDTO(user);
+		 
+		  System.out.println(   "  asdsdsad  " + mail    );
+		 
+	      List<User> users =  userRepository
+	            .findByEmailIgnoreCase(mail.trim());
+	      
+	      if(users != null && users.size() > 0 ) {
+	    	  User user  = users.get(0);
+	    	  user.setResetKey(RandomUtil.generateResetKey());
+              user.setResetDate(Instant.now());
+              user = userRepository.save(user); 
+              return new UserDTO(user);
+	      }     
+	        return null;       
 	    }
 	 
 	 
@@ -399,6 +407,12 @@ public class UserServiceImpl  implements UserService{
 			}
 			
 			return false;
+		}
+
+		@Override
+		public String getOTP(Long mobile) {
+			User user = userRepository.findOneWithAuthoritiesByMobile( mobile).get();
+			return user.getOtp()+"";
 		}
 	    
 	    

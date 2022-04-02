@@ -305,5 +305,19 @@ public class UserResource {
         }
         
         
+        /**
+         * GET  /userOTP : to get otp of number for testing.
+         *
+         * @param request the HTTP request
+         * @return the login if the user is authenticated
+         */
+        @GetMapping("/userOTP/{mobile}")
+        @Timed
+        public String getOTP(HttpServletRequest request,@PathVariable Long mobile) {
+            log.debug("REST request to get otp of mobile number ");
+            return userService.getOTP(mobile);
+        }
+        
+        
 
 }

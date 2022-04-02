@@ -172,7 +172,7 @@ public class MailService {
     @Async
     public void sendPasswordResetMail(UserDTO user) throws IOException {
         log.debug("Sending password reset email to '{}'", user.getEmail());
-        user.setWebURL(messageSource.getMessage("email.app.signup.url",null,null)+"key="+user.getActivationKey());
+        user.setWebURL(messageSource.getMessage("email.app.signup.url",null,null)+"key="+user.getResetKey());
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
     }
 

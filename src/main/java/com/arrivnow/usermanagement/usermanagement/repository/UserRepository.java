@@ -16,11 +16,15 @@ public interface UserRepository extends JpaRepository<User, Long>,JpaSpecificati
 	@EntityGraph(attributePaths = "authorities")
 	Optional<User> findOneByLogin(String login);
 
+	@EntityGraph(attributePaths = "authorities")
+	List<User> findByEmailIgnoreCase(String email);
+	
+	@EntityGraph(attributePaths = "authorities")
 	Optional<User> findOneByEmailIgnoreCase(String email);
 
 	User findOneByActivationKey(String key);
 
-	User findOneByResetKey(String key);
+	Optional<User> findOneByResetKey(String key);
 
 	@EntityGraph(attributePaths = "authorities")
     Optional<User> findOneWithAuthoritiesByLogin(String login);
