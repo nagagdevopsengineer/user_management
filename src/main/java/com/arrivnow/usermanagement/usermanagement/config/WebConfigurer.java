@@ -1,6 +1,6 @@
 package com.arrivnow.usermanagement.usermanagement.config;
 
-import java.util.Locale;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,8 +14,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.zalando.problem.jackson.ProblemModule;
+import org.zalando.problem.violations.ConstraintViolationProblemModule;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
@@ -61,6 +68,13 @@ public class WebConfigurer implements ServletContextInitializer,WebMvcConfigurer
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+    
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        ObjectMapper mapper = Jackson2ObjectMapperBuilder.json()
+            .modules(new ProblemModule(), new ConstraintViolationProblemModule()).build();
+
+        converters.add(new MappingJackson2HttpMessageConverter(mapper));
     }
 
 }

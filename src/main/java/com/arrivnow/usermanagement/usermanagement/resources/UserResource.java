@@ -44,6 +44,7 @@ import com.arrivnow.usermanagement.usermanagement.service.UserService;
 import com.arrivnow.usermanagement.usermanagement.service.impl.MailService;
 
 import io.micrometer.core.annotation.Timed;
+import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("users")
@@ -266,17 +267,21 @@ public class UserResource {
          * {@code POST   /account/reset-password/finish} : Finish to reset the password of the user.
          *
          * @param keyAndPassword the generated key and the new password.
+         * @throws NotFoundException 
          * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
          * @throws RuntimeException {@code 500 (Internal Server Error)} if the password could not be reset.
          */
         @PostMapping(path = "/reset-password/finish")
-        public ResponseEntity<ResponseMessage>  finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
+        public ResponseEntity<ResponseMessage>  finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) throws NotFoundException {
         	 ResponseMessage rm = new ResponseMessage();
             if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
             	rm.setMessage("Invalid  Password  ");
                 rm.setResult(false);
                // throw new InvalidPasswordException();
             }
+            
+            try {
+            
             UserDTO user =
                 userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
             rm.setMessage("Password reset done, please login ");
@@ -287,6 +292,10 @@ public class UserResource {
                // throw new AccountResourceException("No user was found for this reset key");
             }
             
+            }catch (Exception ex ) {
+            	
+            	throw new NotFoundException(ex.getMessage());
+            }
             return ResponseEntity.ok(rm);
         }
 

@@ -205,6 +205,8 @@ public class MailService {
 				
 				otp = sendOTP(otp,OtpSMS);
 				
+				
+				
 				user.setOtp(otp.getOtp());
 				
 				
@@ -214,17 +216,17 @@ public class MailService {
 			
 		}else {
 			
-			throw new Exception("Not Authorized");
+			throw new UsernameNotFoundException("App user does not exist with given mobile.");
 		}
 		
 		}else {
 			
-			throw new UsernameNotFoundException("User not exist with given mobile.");
+			throw new UsernameNotFoundException("App user does not exist with given mobile.");
 			
 		}
 		
 		
-		
+		otp.setOtp(null);
 		
 		return otp;
 	}
