@@ -28,7 +28,7 @@ deploy-user-management:
   stage: deploy_user_management
   image: vapprtech/awskubectl:latest
   before_script:
-    - aws eks update-kubeconfig --name vapprtech --region us-east-2 
+    - aws eks update-kubeconfig --name arrinow --region us-east-2 
     - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
     - kubectl apply -f manifest/user_management
