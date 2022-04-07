@@ -202,8 +202,8 @@ public class MailService {
 					OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.eapp.hash"));
 				}
 				
-				
-				otp = sendOTP(otp,OtpSMS);
+				//Commented due to low balance  will be un commented once twillio account recharged
+				//otp = sendOTP(otp,OtpSMS);
 				
 				
 				
