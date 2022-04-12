@@ -1,12 +1,44 @@
+#FROM consul:0.9.2
 FROM openjdk:11
-#ARG JAR_FILE=target/*.jar
+
 RUN apt-get update 
 RUN apt-get install -y maven
+
+RUN apt-get install -y wget unzip
+RUN wget https://releases.hashicorp.com/consul/1.11.4/consul_1.11.4_linux_amd64.zip
+
+RUN unzip consul_1.11.4_linux_amd64.zip
+RUN mv consul /usr/local/bin/
+
+RUN ls
+RUN echo $PATH
+
+RUN consul version
+
+
 RUN mkdir /app
-#COPY  usermanagement-0.0.1-SNAPSHOT.jar user_management.jar
+
 COPY src /app/src
 COPY pom.xml /app
 WORKDIR /app
-RUN mvn package
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","./target/usermanagement-0.0.1-SNAPSHOT.jar"]
+
+EXPOSE 8081
+
+CMD consul agent -dev | mvn package
+
+#CMD consul agent -dev -data-dir=/tmp/consul &
+
+#RUN mvn package
+
+
+#ENTRYPOINT ["java","-jar","./target/usermanagement-0.0.1-SNAPSHOT.jar"]
+
+
+
+#CMD consul agent -dev && tail -f /dev/null
+
+
+#, "start"]
+
+
+
