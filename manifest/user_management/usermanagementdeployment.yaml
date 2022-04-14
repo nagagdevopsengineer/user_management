@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: usermanagement
-        image: vapprtech/usermanagement-openjdk:11
+        image: vapprtech/usermanagement-reactjs:latest
         ports:
         - name: https
           containerPort: 8082

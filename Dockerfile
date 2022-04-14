@@ -1,4 +1,4 @@
-#FROM consul:0.9.2
+FROM consul
 FROM openjdk:11
 
 RUN apt-get update 
@@ -22,9 +22,15 @@ COPY src /app/src
 COPY pom.xml /app
 WORKDIR /app
 
-EXPOSE 8081
+EXPOSE 8500
+RUN mvn package
 
-CMD consul agent -dev | mvn package
+CMD consul agent -dev
+
+
+#ENTRYPOINT ["java","-jar","./target/usermanagement-0.0.1-SNAPSHOT.jar"]
+
+#CMD consul agent -dev | mvn package
 
 #CMD consul agent -dev -data-dir=/tmp/consul &
 

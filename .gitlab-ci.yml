@@ -1,7 +1,7 @@
 image: docker:19.03.12
 
 variables:
-  BUILD_IMAGE: "vapprtech/usermanagement-openjdk:11"
+  CONTAINER_IMAGE: "vapprtech/arrivnow-reactjs:${CI_COMMIT_SHORT_SHA}"
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
@@ -9,34 +9,34 @@ services:
 
 stages:          # List of stages for jobs, and their order of execution
   - build_image
-  - deploy_user_management
+  - deploy_usermanagement
 
 docker-build-image:
   stage: build_image
   script:
     - docker info
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - docker build -t ${BUILD_IMAGE} -f Dockerfile .
-    - docker push  ${BUILD_IMAGE}
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "master"'
-      exists:
-        - Dockerfile
-      when: always
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - docker build -t ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
+    - docker tag ${CONTAINER_IMAGE} vapprtech/arrivnow-reactjs:latest
+    - docker push ${CONTAINER_IMAGE}
+  when: always
+  only: 
+    - develop
 
-deploy-user-management:
-  stage: deploy_user_management
+
+deploy-usermanagement:
+  stage: deploy_usermanagement
+  #needs: ["docker-build-image"]
   image: vapprtech/awskubectl:latest
   before_script:
     - aws eks update-kubeconfig --name arrivnow --region us-east-2 
     - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
-    - kubectl apply -f manifest/user_management
-    - sleep 60
-    - kubectl get pods -n usermanagement --field-selector=status.phase=Running
-    - kubectl get svc -n usermanagement
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "master"'
-      changes:
-        - manifest/user_management
-      when: always
+      - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
+      - kubectl apply -f manifest
+      - kubectl get pods -n usermanagement 
+      - kubectl get svc -n usermanagement -o wide
+  when: always
+  only: 
+    - develop
