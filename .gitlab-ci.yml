@@ -33,7 +33,8 @@ deploy-usermanagement:
     - aws eks update-kubeconfig --name arrivnow --region us-east-2 
     - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
-      - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
+      - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/user_management/usermanagementdeployment.yaml
+      - cat manifest/user_management/usermanagementdeployment.yaml
       - kubectl apply -f manifest
       - kubectl get pods -n usermanagement 
       - kubectl get svc -n usermanagement -o wide
