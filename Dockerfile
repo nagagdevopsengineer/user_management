@@ -1,4 +1,4 @@
-FROM consul
+FROM maven:3.5-jdk-8-alpine
 FROM openjdk:11
 
 RUN apt-get update 
@@ -10,41 +10,18 @@ RUN wget https://releases.hashicorp.com/consul/1.11.4/consul_1.11.4_linux_amd64.
 RUN unzip consul_1.11.4_linux_amd64.zip
 RUN mv consul /usr/local/bin/
 
-RUN ls
-RUN echo $PATH
-
 RUN consul version
-
+RUN mvn -version
 
 RUN mkdir /app
-
 COPY src /app/src
 COPY pom.xml /app
 WORKDIR /app
 
-EXPOSE 8500
-RUN mvn package
+RUN consul agent leave | mvn package
 
-CMD consul agent -dev
+WORKDIR /app
 
+EXPOSE 8082
 
-#ENTRYPOINT ["java","-jar","./target/usermanagement-0.0.1-SNAPSHOT.jar"]
-
-#CMD consul agent -dev | mvn package
-
-#CMD consul agent -dev -data-dir=/tmp/consul &
-
-#RUN mvn package
-
-
-#ENTRYPOINT ["java","-jar","./target/usermanagement-0.0.1-SNAPSHOT.jar"]
-
-
-
-#CMD consul agent -dev && tail -f /dev/null
-
-
-#, "start"]
-
-
-
+CMD consul agent -dev | java -jar ./target/usermanagement-0.0.1-SNAPSHOT.jar
