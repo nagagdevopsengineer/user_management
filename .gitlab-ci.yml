@@ -35,7 +35,7 @@ deploy-usermanagement:
   script:
       - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/user_management/usermanagementdeployment.yaml
       - cat manifest/user_management/usermanagementdeployment.yaml
-      - kubectl apply -f manifest
+      - kubectl apply -f manifest/*
       - kubectl get pods -n usermanagement 
       - kubectl get svc -n usermanagement -o wide
   when: always
