@@ -35,7 +35,7 @@ deploy-arrivnow-dev:
     - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
      # - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
-      - kubectl apply -f manifest/
+      - kubectl apply -f manifest/*
       - kubectl rollout restart deployment usermanagement -n arrivnow
       - kubectl get pods -n arrivnow 
       - kubectl get svc -n arrivnow -o wide
@@ -52,7 +52,7 @@ deploy-arrivnow-qa:
     - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
      # - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
-      - kubectl apply -f manifest/
+      - kubectl apply -f manifest/*
       - kubectl rollout restart deployment usermanagement -n arrivnow
       - kubectl get pods -n arrivnow 
       - kubectl get svc -n arrivnow -o wide
