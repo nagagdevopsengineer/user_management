@@ -9,7 +9,7 @@ spec:
   type: LoadBalancer
   ports:
   - name: https
-    port: 8080
+    port: 80
     targetPort: 8082
   selector:
     app: usermanagement

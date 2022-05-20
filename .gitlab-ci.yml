@@ -1,7 +1,7 @@
 image: docker:19.03.12
 
 variables:
-  CONTAINER_IMAGE: "vapprtech/arrivnow-reactjs:${CI_COMMIT_SHORT_SHA}"
+  CONTAINER_IMAGE: "vapprtech/arrivnow-reactjs:latest"
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
@@ -9,7 +9,8 @@ services:
 
 stages:          # List of stages for jobs, and their order of execution
   - build_image
-  - deploy_usermanagement
+  - deploy_arrivnow-dev
+  - deploy_arrivnow-qa
 
 docker-build-image:
   stage: build_image
@@ -22,22 +23,39 @@ docker-build-image:
     - docker push ${CONTAINER_IMAGE}
   when: always
   only: 
-    - master
+    - develop
 
 
-deploy-usermanagement:
-  stage: deploy_usermanagement
+deploy-arrivnow-dev:
+  stage: deploy_arrivnow-dev
   #needs: ["docker-build-image"]
   image: vapprtech/awskubectl:latest
   before_script:
-    - aws eks update-kubeconfig --name arrivnow --region us-east-2 
+    - aws eks update-kubeconfig --name arrivnow-dev --region us-east-2 
     - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
-      - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/user_management/usermanagementdeployment.yaml
-      - cat manifest/user_management/usermanagementdeployment.yaml
-      - kubectl apply -f manifest/*
-      - kubectl get pods -n usermanagement 
-      - kubectl get svc -n usermanagement -o wide
+     # - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
+      - kubectl apply -f manifest
+      - kubectl rollout restart deployment usermanagement -n arrivnow
+      - kubectl get pods -n arrivnow 
+      - kubectl get svc -n arrivnow -o wide
   when: always
   only: 
-    - master
+    - develop
+
+deploy-arrivnow-qa:
+  stage: deploy_arrivnow-qa
+  #needs: ["docker-build-image"]
+  image: vapprtech/awskubectl:latest
+  before_script:
+    - aws eks update-kubeconfig --name arrivnow-qa --region us-east-2 
+    - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
+  script:
+     # - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
+      - kubectl apply -f manifest
+      - kubectl rollout restart deployment usermanagement -n arrivnow
+      - kubectl get pods -n arrivnow 
+      - kubectl get svc -n arrivnow -o wide
+  when: always
+  only: 
+    - staging
