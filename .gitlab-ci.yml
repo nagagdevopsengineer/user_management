@@ -1,7 +1,7 @@
 image: docker:19.03.12
 
 variables:
-  CONTAINER_IMAGE: "vapprtech/arrivnow-reactjs:latest"
+  CONTAINER_IMAGE: "vapprtech/user_management-openjdk:latest"
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
@@ -19,7 +19,7 @@ docker-build-image:
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
     - docker build -t ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
-    - docker tag ${CONTAINER_IMAGE} vapprtech/arrivnow-reactjs:latest
+    - docker tag ${CONTAINER_IMAGE} vapprtech/user_management-openjdk:latest
     - docker push ${CONTAINER_IMAGE}
   when: always
   only: 
@@ -36,9 +36,9 @@ deploy-arrivnow-dev:
   script:
      # - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
       - kubectl apply -f manifest/*
-      - kubectl rollout restart deployment usermanagement -n arrivnow
-      - kubectl get pods -n arrivnow 
-      - kubectl get svc -n arrivnow -o wide
+      #- kubectl rollout restart deployment usermanagement -n arrivnow
+      - kubectl get pods -n usermanagement 
+      - kubectl get svc -n usermanagement -o wide
   when: always
   only: 
     - develop
@@ -53,9 +53,9 @@ deploy-arrivnow-qa:
   script:
      # - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
       - kubectl apply -f manifest/*
-      - kubectl rollout restart deployment usermanagement -n arrivnow
-      - kubectl get pods -n arrivnow 
-      - kubectl get svc -n arrivnow -o wide
+     # - kubectl rollout restart deployment usermanagement -n arrivnow
+      - kubectl get pods -n usermanagement 
+      - kubectl get svc -n usermanagement -o wide
   when: always
   only: 
     - staging
