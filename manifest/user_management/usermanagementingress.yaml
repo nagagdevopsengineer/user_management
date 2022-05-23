@@ -7,6 +7,7 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: instance
+    
 
 spec:
   rules:
@@ -14,6 +15,7 @@ spec:
    - http:
         paths:
           - path: /getData
+            pathType: Prefix
             backend:
               serviceName: usermanagement
               servicePort: 80
