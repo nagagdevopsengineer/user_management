@@ -13,7 +13,7 @@ spec:
    - host: dev-usermanagement.vapprtech.com
    - http:
         paths:
-          - path: /
+          - path: /getData
             backend:
               serviceName: usermanagement
               servicePort: 80
