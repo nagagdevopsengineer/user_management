@@ -14,7 +14,7 @@ spec:
    - host: dev-usermanagement.vapprtech.com
    - http:
         paths:
-          - path: /getData
+          - path: /getData**
             pathType: Prefix
             backend:
               serviceName: usermanagement
