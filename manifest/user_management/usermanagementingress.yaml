@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  namespace: crm-content
+  namespace: usermanagement
   name: ingress
   annotations:
     kubernetes.io/ingress.class: alb
@@ -10,11 +10,11 @@ metadata:
 
 spec:
   rules:
-   - host: dev-crmcontent.vapprtech.com
+   - host: dev-usermanagement.vapprtech.com
    - http:
         paths:
           - path: /getData
             backend:
-              serviceName: crm-content
+              serviceName: usermanagement
               servicePort: 80
               
