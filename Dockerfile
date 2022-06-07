@@ -22,6 +22,6 @@ RUN consul agent leave | mvn package
 
 WORKDIR /app
 
-EXPOSE 8082
+EXPOSE 8081
 
 CMD consul agent -dev | java -jar ./target/usermanagement-0.0.1-SNAPSHOT.jar
