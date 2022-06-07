@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+#apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: usermanagement
+  name: ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: instance
+    
+spec:
+  rules:
+   - host: dev-usermanagement.vapprtech.com
+   - http:
+        paths:
+          - path: /getData
+            pathType: Prefix
+            backend:
+              service:
+               name: usermanagement
+               port:
+                number: 80
