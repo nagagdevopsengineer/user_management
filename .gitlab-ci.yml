@@ -36,7 +36,7 @@ deploy-arrivnow-dev:
   script:
      # - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
       - kubectl apply -f manifest/*
-      #- kubectl rollout restart deployment usermanagement -n arrivnow
+      - kubectl rollout restart deployment usermanagement -n usermanagement
       - kubectl get pods -n usermanagement 
       - kubectl get svc -n usermanagement -o wide
   when: always
