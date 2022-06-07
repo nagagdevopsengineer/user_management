@@ -20,4 +20,4 @@ spec:
         image: vapprtech/user_management-openjdk:latest
         ports:
         - name: https
-          containerPort: 8082
+          containerPort: 8081
