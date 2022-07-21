@@ -329,6 +329,7 @@ public class UserServiceImpl  implements UserService{
 	                }
 	                String encryptedPassword = passwordEncoder.encode(newPassword);
 	                user.setPassword(encryptedPassword);
+	                userRepository.save(user);
 	            });
 	    }
 	    
