@@ -10,7 +10,7 @@ services:
 stages:          # List of stages for jobs, and their order of execution
   - build_image
   - deploy_arrivnow-dev
-  - deploy_arrivnow-qa
+  - deploy_arrivnow-sales-demo
 
 docker-build-image:
   stage: build_image
@@ -44,12 +44,12 @@ deploy-arrivnow-dev:
   only: 
     - develop
 
-deploy-arrivnow-qa:
-  stage: deploy_arrivnow-qa
+deploy-arrivnow-sales-demo:
+  stage: deploy_arrivnow-sales-demo
   #needs: ["docker-build-image"]
   image: vapprtech/awskubectl:latest
   before_script:
-    - aws eks update-kubeconfig --name arrivnow-qa --region us-east-2 
+    - aws eks update-kubeconfig --name arrivnow-sales-demo --region us-east-2 
     #- export KUBECONFIG=$KUBECONFIG_FILE
     - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
   script:
@@ -60,4 +60,4 @@ deploy-arrivnow-qa:
       - kubectl get svc -n usermanagement -o wide
   when: always
   only: 
-    - staging
+    - develop
