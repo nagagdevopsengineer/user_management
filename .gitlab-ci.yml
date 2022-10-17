@@ -60,5 +60,4 @@ deploy-arrivnow-sales-demo:
       - kubectl get pods -n usermanagement 
       - kubectl get svc -n usermanagement -o wide
   when: always
-  only: 
-    - sales-demo
+ 
