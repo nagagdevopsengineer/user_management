@@ -2,6 +2,7 @@ package com.arrivnow.usermanagement.usermanagement.config;
 
 
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,24 +10,28 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+//import org.springframework.web.filter.CorsFilter;
 
+import com.arrivnow.usermanagement.usermanagement.CorsFilter;
 import com.arrivnow.usermanagement.usermanagement.security.AuthoritiesConstants;
 import com.arrivnow.usermanagement.usermanagement.security.jwt.JWTConfigurer;
 import com.arrivnow.usermanagement.usermanagement.security.jwt.TokenProvider;
 
+@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
 
-   // private final CorsFilter corsFilter;
+    private final CorsFilter corsFilter;
    // private final SecurityProblemSupport problemSupport;
 
-    public SecurityConfiguration(TokenProvider tokenProvider) {
+    public SecurityConfiguration(TokenProvider tokenProvider,CorsFilter corsFilter) {
         this.tokenProvider = tokenProvider;
-        //this.corsFilter = corsFilter;
+        this.corsFilter = corsFilter;
       //  this.problemSupport = problemSupport;
     }
 
@@ -38,6 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/swagger-ui/index.html")
             .antMatchers("/test/**");
     }
+    
+   
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -45,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
             .csrf()
             .disable()
-           // .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
                // .authenticationEntryPoint(problemSupport)
                // .accessDeniedHandler(problemSupport)

@@ -124,16 +124,15 @@ public class UserResource {
         
         @PostMapping("/authenticate")
         public ResponseEntity<AuthenticateVM> authorize(@Valid @RequestBody LoginVM loginVM) {
-            System.out.println(loginVM.getUsername()+" user   "+loginVM.getPassword());
             UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-            		 System.out.println(loginVM.getUsername()+" token   "+loginVM.getPassword());
+            
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println(loginVM.getUsername()+" security context   "+loginVM.getPassword());
+            System.out.println(" changing password ===>> "+SecurityUtils.getCurrentUserLogin().get());
             boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
             String jwt = tokenProvider.createToken(authentication, rememberMe);
-            System.out.println(loginVM.getUsername()+" jwt   "+loginVM.getPassword());
+           
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
             UserDTO user = userService.findOneByLogin(loginVM.getUsername());

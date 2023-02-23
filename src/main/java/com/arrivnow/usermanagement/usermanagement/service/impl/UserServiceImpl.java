@@ -320,10 +320,12 @@ public class UserServiceImpl  implements UserService{
 	    
 	    @Transactional
 	    public void changePassword(String currentClearTextPassword, String newPassword) {
+	    	System.out.println(" changing password ===>> "+SecurityUtils.getCurrentUserLogin().get());
 	        SecurityUtils.getCurrentUserLogin()
 	            .flatMap(userRepository::findOneByLogin)
 	            .ifPresent(user -> {
 	                String currentEncryptedPassword = user.getPassword();
+	                System.out.println( " existing user ==>> ");
 	                if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
 	                    throw new InvalidPasswordException();
 	                }

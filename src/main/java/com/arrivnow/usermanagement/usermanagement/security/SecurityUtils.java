@@ -24,6 +24,7 @@ public final class SecurityUtils {
      */
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
+        System.out.println("  wefdsfdsf "+securityContext.getAuthentication());
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
     }
 
