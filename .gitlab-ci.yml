@@ -7,7 +7,8 @@ build:
     image:  maven:3.5-jdk-8-alpine
     script:
         - echo "Building app..."
-        - ./mvnw install
+        - RUN consul agent leave | mvn package
+        #-./mvnw install
         - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
