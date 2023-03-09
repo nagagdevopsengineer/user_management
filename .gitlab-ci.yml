@@ -7,7 +7,7 @@ build:
     image:  maven:3.5-jdk-8-alpine
     script:
         - echo "Building app..."
-        - apt-get install -y maven
+        - sudo apt-get install -y maven
         #-./mvnw install
         - echo "Finished building the app."
     artifacts:
