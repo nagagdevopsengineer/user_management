@@ -4,7 +4,7 @@ stages:
 
 build:
     stage: build
-    image:  maven:3.6.1-jdk-8-slim
+    image:  maven:3.5-jdk-8-alpine
     script:
         - echo "Building app..."
         - mvn install
