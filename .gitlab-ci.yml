@@ -1,37 +1,25 @@
+variables:
+  AWS_ACCESS_KEY_ID: <your_aws_access_key_id>
+  AWS_SECRET_ACCESS_KEY: <your_aws_secret_access_key>
+  AWS_DEFAULT_REGION: <your_aws_region>
+  JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+
 stages:
-    - build
-    - deploy
+  - build
+  - deploy
 
 build:
-    stage: build
-    image:  maven:3.5-jdk-8-alpine
-    script:
-        - echo "Building app..."
-        - ./mvnw clean install
-        - echo "Finished building the app."
-    artifacts:
-        #expire_in: 1 week
-        paths:
-            - /usr/lib/jvm/java-8-openjdk-amd64
-    only:
-        - user-dev
+  image: maven:3-jdk-11
+  stage: build
+  script:
+    - mvn package -DskipTests
 
 deploy:
-    stage: deploy
-    image: alpine:3.11
-    before_script:
-        - apk update && apk add openssh-client bash
-        - mkdir -p ~/.ssh
-        - eval $(ssh-agent -s)
-        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-        - touch ~/.ssh/config
-        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-        - ssh-keyscan -H $DEPLOY_SERVER_IP >> ~/.ssh/known_hosts
-    script:
-        - echo "Deploying started..."
-        - ssh ec2-user@$DEPLOY_SERVER_IP "sudo systemctl stop consoleapp.service"
-        - scp ./target/consoleapp.jar ec2-user@$DEPLOY_SERVER_IP:~/console-app/
-        - ssh ec2-user@$DEPLOY_SERVER_IP "sudo systemctl start consoleapp.service"
-        - echo "Finished deploying the app."
-    only:
-        - user-dev
+  image: python:latest
+  stage: deploy
+  script:
+    - apt-get update && apt-get install -y awscli
+    - aws ec2 run-instances --image-id ami-0c55b159cbfafe1f0 --count 1 --instance-type t2.micro --key-name my-key-pair --security-group-ids sg-0b5f41d8923cb7f3b --subnet-id subnet-0f5b611efeb080a77 || true
+  only:
+    - user-dev
+  when: on_success
