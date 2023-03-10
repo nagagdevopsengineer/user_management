@@ -7,7 +7,7 @@ build:
     image:  maven:3.6.1-jdk-8-slim
     script:
         - echo "Building app..."
-        - mvn clean install
+        - ./mvnw clean install
         - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
