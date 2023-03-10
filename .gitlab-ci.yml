@@ -7,6 +7,6 @@ build:
     image:  maven:3.6.1-jdk-8-slim
     script:
         - echo "Building app..."
-        - cd mvnw
+        - cd src
         - mvn clean install
         - echo "Finished building the app."
