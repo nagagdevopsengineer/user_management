@@ -5,11 +5,8 @@ stages:
 build:
     stage: build
     image:  maven:3.5-jdk-8-alpine
-    script:
-        - echo "Building app..."
-        - ./mvnw clean install
-        - export JAVA_HOME=/opt/java/openjdk
-        - echo "Finished building the app."
+    script: "mvn package -B"
+
     artifacts:
         #expire_in: 1 week
         paths:
@@ -17,22 +14,4 @@ build:
     only:
         - user-dev
 
-deploy:
-    stage: deploy
-    image: alpine:3.11
-    before_script:
-        - apk update && apk add openssh-client bash
-        - mkdir -p ~/.ssh
-        - eval $(ssh-agent -s)
-        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-        - touch ~/.ssh/config
-        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-        - ssh-keyscan -H $DEPLOY_SERVER_IP >> ~/.ssh/known_hosts
-    script:
-        - echo "Deploying started..."
-        - ssh ec2-user@$DEPLOY_SERVER_IP "sudo systemctl stop consoleapp.service"
-        - scp ./target/consoleapp.jar ec2-user@$DEPLOY_SERVER_IP:~/console-app/
-        - ssh ec2-user@$DEPLOY_SERVER_IP "sudo systemctl start consoleapp.service"
-        - echo "Finished deploying the app."
-    only:
-        - user-dev
+
