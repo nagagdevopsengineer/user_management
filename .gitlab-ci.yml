@@ -12,7 +12,7 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-            - JAVA_HOME=/usr/lib/jvm
+            - JAVA_HOME=/usr/lib/jvm/
     only:
         - user-dev
 
