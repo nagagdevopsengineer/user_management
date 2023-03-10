@@ -1,16 +1,15 @@
 stages:
-    - build
-    - deploy
-
+  - build
+  - deploy
+  
 build:
-    stage: build
-    image:  maven:3.6.1-jdk-8-slim
-    script:
-        - echo "Building app..."
-        - ./mvnw install
-        - echo "Finished building the app."
-    artifacts:
-        expire_in: 1 week
-        paths:
-            - target/consoleapp.jar
+  stage: build
+  image: openjdk:12-alpine
+  script:
+    - ./gradlew build
+    -  mv ./build/libs/AWS-0.0.1-SNAPSHOT.jar ./build/libs/$ARTIFACT_NAME
+  artifacts:
+    paths:
+    - ./build/libs/
+
 
