@@ -12,8 +12,7 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-            - export JAVA_HOME=$(/usr/libexec/java_home)
-            - export PATH=$JAVA_HOME/jre/bin:$/usr/lib/jvm/java-8-openjdk-amd64
+            - /usr/lib/jvm/java-8-openjdk-amd64
     only:
         - user-dev
 
