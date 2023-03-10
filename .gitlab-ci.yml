@@ -3,14 +3,16 @@ stages:
     - deploy
 
 build:
+    image: maven:3.6.0-jdk-8-slim
     stage: build
-    image:  maven:3.5-jdk-8-alpine
-    script: "mvn package -B"
+    script:
+        - - mvn clean install -Dmaven.test.skip=true
 
     artifacts:
         #expire_in: 1 week
         paths:
-            - export JAVA_HOME=/opt/java/openjdk
+            - archivist/target/*.jar
+            - elasticsearch/*.zip
     only:
         - user-dev
 
