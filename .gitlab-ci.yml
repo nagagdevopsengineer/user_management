@@ -8,6 +8,7 @@ build:
     script:
         - echo "Building app..."
         - ./mvnw clean install
+        - export JAVA_HOME=/opt/java/openjdk
         - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
