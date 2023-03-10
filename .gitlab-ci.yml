@@ -8,5 +8,5 @@ build:
     script:
         - echo "Building app..."
         - cd src
-        - mvn clean install
+        - ./mvnw install
         - echo "Finished building the app."
