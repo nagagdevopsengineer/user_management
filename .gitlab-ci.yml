@@ -1,15 +1,14 @@
 stages:
   - build
   - deploy
-  
+
 build:
   stage: build
-  image: openjdk:12-alpine
+  image: gradle:jdk
   script:
-    - ./gradlew build
-    -  mv ./build/libs/AWS-0.0.1-SNAPSHOT.jar ./build/libs/$ARTIFACT_NAME
+    - gradle build
   artifacts:
     paths:
-    - ./build/libs/
+      - my_app.jar
 
 
