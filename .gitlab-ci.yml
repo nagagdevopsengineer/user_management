@@ -1,14 +1,12 @@
-variables:
-  IMAGE_NAME: $CI_REGISTRY_IMAGE
-  IMAGE_TAG: "1.0"
 stages:
     - build
-    - push
-build_image:
-  stage: build
-  image: docker:dind
-  services:
-    - docker:dind
-  script:
-    - docker info
-    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - deploy
+
+build:
+    stage: build
+    image:  maven:3.6.1-jdk-8-slim
+    script:
+        - echo "Building app..."
+        - cd mvnw
+        - mvn clean install
+        - echo "Finished building the app."
