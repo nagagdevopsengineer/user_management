@@ -9,6 +9,6 @@ build_image:
   image: docker:dind
   services:
     - docker:dind
-script:
+  script:
     - docker info
     - docker build -t $IMAGE_NAME:$IMAGE_TAG .
