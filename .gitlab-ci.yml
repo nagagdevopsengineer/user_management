@@ -1,19 +1,24 @@
 stages:
-    - build
-    - deploy
+  - build
+  - deploy
 
 build:
-    image: maven:3.6.0-jdk-8-slim
-    stage: build
-    script:
-        - $MAVEN_HOME/bin/mvn clean install
+  stage: build
+  image: gradle:jdk
+  script:
+    - gradle build
+  artifacts:
+    paths:
+      - my_app.jar
 
-    artifacts:
-        #expire_in: 1 week
-        paths:
-            - archivist/target/*.jar
-            - elasticsearch/*.zip
-    only:
-        - user-dev
+deploy:
+  stage: deploy
+  image: ubuntu:latest
+  script:
+    - apt-get update
+    - apt-get -y install openssh-client
+    - scp my_app.jar target.server:/my_app.jar
+only:
+    - user-dev
 
 
