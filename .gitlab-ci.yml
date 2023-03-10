@@ -11,14 +11,4 @@ build:
     paths:
       - my_app.jar
 
-deploy:
-  stage: deploy
-  image: ubuntu:latest
-  script:
-    - apt-get update
-    - apt-get -y install openssh-client
-    - scp my_app.jar target.server:/my_app.jar
-only:
-    - user-dev
-
 
