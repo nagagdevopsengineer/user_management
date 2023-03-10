@@ -12,7 +12,7 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-            - java -jar target/usermanagement-0.0.1-SNAPSHOT.jar &
+            - "**/target" 
     only:
         - user-dev
 
