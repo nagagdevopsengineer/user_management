@@ -12,7 +12,8 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-            - export JAVA_HOME=$/usr/lib/jvm/java-11-openjdk-amd64
+            - export JAVA_HOME=$/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
     only:
         - user-dev
 
