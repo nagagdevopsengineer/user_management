@@ -6,7 +6,7 @@ build:
     stage: build
     image: maven:latest
     script:
-        - MAVEN_HOME/bin/mvn clean
+        - export M2_HOME=/usr/local/apache-maven/apache-maven-3.3.9
         - mvn clean install
         - echo "Finished building the app."
     artifacts:
