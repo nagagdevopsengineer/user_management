@@ -1,10 +1,10 @@
-image: atlassian/default-image:3
+image: maven:default
 
 pipelines:
   default:
     - parallel:
       - step:
-          name: Build and Test
+          name: Build
           script:
             - ./mvnw verify --file pom.xml
           caches:
