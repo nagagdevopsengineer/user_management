@@ -6,7 +6,7 @@ build:
     stage: build
     image: maven:3.6.1-jdk-8-slim
     script:
-        - $MAVEN_HOME/bin/mvn clean
+        - MAVEN_HOME/bin/mvn clean
         - mvn clean install
         - echo "Finished building the app."
     artifacts:
