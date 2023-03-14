@@ -1,6 +1,3 @@
-variables:
-    export JAVA_HOME=/opt/java/openjdk
-
 stages:
     - build
     - deploy
