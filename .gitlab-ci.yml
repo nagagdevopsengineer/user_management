@@ -10,8 +10,8 @@ build:
         - ./mvnw clean install
         - echo "Finished building the app."
     artifacts:
-        #expire_in: 1 week
+        expire_in: 1 week
         paths:
-           - JAVA_HOME = "%JAVA_HOME%" >&2
+           - %JAVA_HOME%\bin\java.exe
     only:
         - user-dev
