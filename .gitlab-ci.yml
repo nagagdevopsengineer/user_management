@@ -1,4 +1,4 @@
-image: maven:default
+image: atlassian/default-image:3
 
 pipelines:
   default:
@@ -10,7 +10,7 @@ pipelines:
           caches:
             - maven
           after-script:
-            - pipe: atlassian/checkstyle-report:0.3.0
+            #- pipe: atlassian/checkstyle-report:0.3.0
               variables:
                 DEBUG: "true"
       - step:
