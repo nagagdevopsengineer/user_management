@@ -12,6 +12,6 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-            - target/consoleapp.jar
+            - export JAVA_HOME="`/usr/libexec/java_home`"
     only:
         - user-dev
