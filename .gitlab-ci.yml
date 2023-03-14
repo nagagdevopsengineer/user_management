@@ -12,6 +12,6 @@ build:
     artifacts:
         expire_in: 1 week
         paths:
-           - %JAVA_HOME%\bin\java.exe
+           - /usr/lib/jvm/java-11-openjdk-amd64
     only:
         - user-dev
