@@ -95,7 +95,7 @@ public class MailService {
         	Content content = new Content("text/html", contentStr);
             Mail mail = new Mail(from, subject, to, content);
             
-            SendGrid sg = new SendGrid("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");
+            SendGrid sg = new SendGrid("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");
             Request request = new Request();
             try {
               request.setMethod(Method.POST);
