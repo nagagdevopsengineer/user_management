@@ -4,7 +4,7 @@ stages:
 
 build:
     stage: build
-    image:  maven:default
+    image: maven:latest or image: maven:3-jdk-10 or image: maven:3-jdk-9
     script:
         - echo "Building app..."
         - mvn -U clean install
