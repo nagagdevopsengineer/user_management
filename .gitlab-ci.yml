@@ -12,6 +12,6 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-           - /usr/bin/java
+           - JAVA_HOME = "%JAVA_HOME%" >&2
     only:
         - user-dev
