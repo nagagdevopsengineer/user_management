@@ -6,7 +6,7 @@ build:
     stage: build
     image: maven:3.6.1-jdk-8-slim
     script:
-        - echo "Building app..."
+        - export MAVEN_HOME=/usr/local/apache-maven
         - mvn clean install
         - echo "Finished building the app."
     artifacts:
