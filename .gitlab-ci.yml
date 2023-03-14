@@ -7,7 +7,7 @@ build:
     image: maven:3-jdk-9
     script:
         - echo "Building app..."
-        - user_management/ mvnw -U clean install
+        - mvnw clean install
         - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
