@@ -7,7 +7,7 @@ build:
     image:  maven:default
     script:
         - echo "Building app..."
-        - mvn clean install
+        - mvn -U clean install
         - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
