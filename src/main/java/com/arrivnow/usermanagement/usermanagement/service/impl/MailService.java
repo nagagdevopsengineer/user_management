@@ -245,25 +245,57 @@ public class MailService {
 		
 		
 		Twilio.init(ACCOUNT_SID, AUTH_TOKEN); 
+		try {
         Message message = Message.creator( 
                 new com.twilio.type.PhoneNumber(mobile),  
                 "MG24313a7e6ae8031b9d72a5c277bb228b", 
                 sms)      
             .create(); 
-        
-        
+        System.out.println(" SMS id "+message.getErrorMessage());
         otp.setMessageId(message.getSid());
+        
+		}catch(Exception ex) {
+			
+			ex.printStackTrace();
+			
+		}
+       
+        
+        
+       
         
         return otp;
  
 	}
 	
 	public static final String ACCOUNT_SID = "AC3f967b4e1f76a7e56162b630ee82cd37";
-    public static final String AUTH_TOKEN = "eee79916f6e2a3deac2ea1a28a3dcddc";
+    public static final String AUTH_TOKEN = "79fdd20dfc70c0510d1d430719cca746";
 
 		
 		
     public static void main(String[] args) { 
+    	
+    	
+     String mobile = "+919818409735";
+		
+		String sms = "Dear Rajeev Tyagi, Your OTP for ArrivNow is 1234 Use this to login . JG6bstywIsq .";
+		
+		Twilio.init(ACCOUNT_SID, AUTH_TOKEN); 
+		try {
+        Message message = Message.creator( 
+                new com.twilio.type.PhoneNumber(mobile),  
+                "MG24313a7e6ae8031b9d72a5c277bb228b", 
+                sms)      
+            .create(); 
+        System.out.println(" SMS id "+message.getErrorMessage());
+        
+		}catch(Exception ex) {
+			
+			ex.printStackTrace();
+			
+		}
+       
+        
     
     } 
 }
