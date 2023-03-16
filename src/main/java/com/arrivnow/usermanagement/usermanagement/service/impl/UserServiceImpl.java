@@ -386,6 +386,7 @@ public class UserServiceImpl  implements UserService{
 
 		@Override
 		public OtpDTO validateOTP(OtpDTO otp,UserDTO userDto) throws Exception {
+			System.out.println(userDto.getMobile()+" otp  "+otp.getOtp()+" saved otp >> "+userDto.getOtp());
 			if((userDto.getMobile().equals(otp.getMobile())) && (userDto.getOtp().equals(otp.getOtp()))) {
 				otp.setOtpValidated(true);
 				User user  = userRepository.findById(userDto.getId()).get();
