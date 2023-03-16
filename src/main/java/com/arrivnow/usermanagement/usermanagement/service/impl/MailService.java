@@ -206,7 +206,7 @@ public class MailService {
 				}
 				
 				//Commented due to low balance  will be un commented once twillio account recharged
-				//otp = sendOTP(otp,OtpSMS);
+				otp = sendOTP(otp,OtpSMS);
 				
 				
 				
