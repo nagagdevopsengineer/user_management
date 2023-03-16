@@ -194,7 +194,7 @@ public class MailService {
 				char[] otpc = RandomUtil.generateOTP();
 				String otps = new String(otpc);
 				otp.setOtp(Long.parseLong(otps));
-				otp.setOtp(123456l);
+				//otp.setOtp(123456l);
 				otp.setMobile(user.getMobile());
 				
 				OtpSMS = OtpSMS.replace("USERNAME", user.getFirstName());
@@ -229,7 +229,6 @@ public class MailService {
 		}
 		
 		
-		otp.setOtp(null);
 		
 		return otp;
 	}
