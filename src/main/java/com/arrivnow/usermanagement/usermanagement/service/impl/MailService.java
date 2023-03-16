@@ -185,6 +185,9 @@ public class MailService {
 		String OtpSMS = env.getProperty("otp.sms");
 		
 		UserDTO user = userService.findByMobile(otp.getMobile());
+		
+		System.out.println(user.getLogin()+"<< user  >>"+user.getMobile());
+		
 		if(user != null && user.getId() > 0) {
 		if( user.getAuthorities().contains("ROLE_EMPLOYEE") 
 				|| user.getAuthorities().contains("ROLE_HELPER") 
