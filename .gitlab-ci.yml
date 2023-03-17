@@ -21,7 +21,7 @@ deploy:
     stage: deploy
     image: alpine:3.11
     before_script:
-        - add openssh-client
+        - install openssh-clients
         - mkdir -p ~/.ssh
         - eval $(ssh-agent -s)
         - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
