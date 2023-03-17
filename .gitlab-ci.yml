@@ -29,7 +29,8 @@ deploy:
         #- ssh-keyscan -H $DEPLOY_SERVER_IP >> ~/.ssh/known_hosts
     script:
         - echo "Deploying started..."
-        - ssh -v ubuntu@$DEPLOY_SERVER_IP "sudo systemctl stop consoleapp.service"
+        - scp -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ubuntu@${DEV_SERVER_IP}:/home/ubuntu
+        - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ubuntu@${DEV_SERVER_IP}
         - scp ./target/consoleapp.jar ubuntu@$DEPLOY_SERVER_IP:~/console-app/
         - ssh ubuntu@$DEPLOY_SERVER_IP "sudo systemctl start consoleapp.service"
         - echo "Finished deploying the app."
