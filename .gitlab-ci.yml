@@ -7,8 +7,8 @@ build:
     image: maven:latest
     script:
         - echo "Building app..."
-        - export PATH=/usr/share/maven
-        - export PATH=/usr/share/java
+        - ls -la /usr/share/maven
+        - ls -la /usr/share/java
         - ./mvnw install
         - echo "Finished building the app."
     artifacts:
