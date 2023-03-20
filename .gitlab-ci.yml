@@ -11,6 +11,16 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-            - target/consoleapp.jar
+            - home/gitlab-runner
     only:
         - user-dev
+
+deploy:
+    stage: deploy
+    image: python:latest
+    dependencies:
+       - build
+    script:
+       - apt-get update && apt-get install -y sshpass
+       - sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "mkdir -p $DEPLOY_DIR"
+       - sshpass -p $SSH_PASSWORD scp target/*.jar $SSH_USER@$SSH_HOST:$DEPLOY_DIR
