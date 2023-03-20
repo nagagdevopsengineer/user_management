@@ -11,6 +11,6 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-            - home/usermanagement
+            - home/gitlab-runner/
     only:
         - user-dev
