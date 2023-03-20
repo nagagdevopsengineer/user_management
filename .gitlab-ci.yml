@@ -11,6 +11,6 @@ build:
     artifacts:
         #expire_in: 1 week
         paths:
-            - home/gitlab-runner
+            - target/consoleapp.jar
     only:
         - user-dev
