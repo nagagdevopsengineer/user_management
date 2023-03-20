@@ -1,12 +1,10 @@
 stages:
     - build
-    - deploy
-
 build:
     stage: build
     script:
         - echo "Building app..."
-        - ./mvnw clean install
+        - ./mvnw install
         - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
