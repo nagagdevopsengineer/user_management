@@ -9,10 +9,11 @@ build:
         - echo "Building app..."
         - export PATH=/usr/share/maven
         - export PATH=/usr/share/java
+        - ./mnvw install
         - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
         paths:
-            - home/gitlab
+            - home/gitlab-runner
     only:
         - user-dev
