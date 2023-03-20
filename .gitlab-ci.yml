@@ -6,9 +6,6 @@ build:
     stage: build
     image: maven:latest
     script:
-        - echo "Building app..."
-        - ls -la /usr/share/maven
-        - ls -la /usr/share/java
         - ./mvnw install
         - echo "Finished building the app."
     artifacts:
