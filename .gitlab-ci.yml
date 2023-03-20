@@ -4,32 +4,13 @@ stages:
 
 build:
     stage: build
-        script:
+    script:
         - echo "Building app..."
         - ./mvnw clean install
+        - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
         paths:
-            - home/gitlab.runner
-    only:
-        - user-dev
-
-deploy:
-    stage: deploy
-    image: alpine:3.11
-    before_script:
-        - eval $(ssh-agent -s)
-        - echo "$SSH_PRIVATE_KEY"
-        - ssh-add <(echo "$SSH_PRIVATE_KEY") | tr -d '\r'
-        - touch ~/.ssh/config
-        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-        - ssh-keyscan -H $DEPLOY_SERVER_IP >> ~/.ssh/known_hosts
-    script:
-        - echo "Deploying started..."
-        #- scp -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ubuntu@${DEV_SERVER_IP}:/home/ubuntu
-        - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ubuntu@${DEV_SERVER_IP}
-        - scp ./target/consoleapp.jar ubuntu@$DEPLOY_SERVER_IP:~/console-app/
-        - ssh ubuntu@$DEPLOY_SERVER_IP "sudo systemctl start consoleapp.service"
-        - echo "Finished deploying the app."
+            - home/usermanagement
     only:
         - user-dev
