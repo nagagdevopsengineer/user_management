@@ -7,9 +7,9 @@ build:
     image:  maven:3.6.3-jdk-8 
     script:
         - echo "Building app..."
+        - ./mnvw install
         - export PATH=/usr/share/maven
         - export PATH=/usr/share/java
-        - ./mnvw install
         - echo "Finished building the app."
     artifacts:
         #expire_in: 1 week
