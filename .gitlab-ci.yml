@@ -4,7 +4,7 @@ stages:
 
 build:
     stage: build
-    image:  maven:3.6.3-jdk-11-openj9 
+    image:  maven:3.6.3
     script:
         - echo "Building app..."
         - ./mvnw install
