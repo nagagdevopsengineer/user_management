@@ -34,9 +34,14 @@ deploy_to_dev:
   before_script:
     - chmod 400 $SSH_PRIVATE_KEY
   script:
+    - scp -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ./docker-compose.yaml ubuntu@65.2.167.182:/home/ubuntu
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@65.2.167.182 "
      docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
-     docker run -d -p 8082:8082 $IMAGE_NAME:$IMAGE_TAG"
+     export DC_IMAGE_NAME=$IMAGE_NAME &&
+     export DC_IMAGE_TAG=$IMAGE_TAG &&
+     docker-compose down &&
+     docker-compose up -d"
+     docker run -d -p 8081:8081 $IMAGE_NAME:$IMAGE_TAG"
   only: 
     - develop  
 
