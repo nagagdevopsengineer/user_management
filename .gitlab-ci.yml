@@ -4,8 +4,6 @@ variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
   IMAGE_TAG: "1.0"
   DOCKER_TLS_CERTDIR: "/certs"
-  DEV_SERVER_IP: 65.2.167.182
-
 services:
   - docker:19.03.12-dind
 
@@ -36,7 +34,7 @@ deploy_to_dev:
   before_script:
     - chmod 400 $SSH_PRIVATE_KEY
   script:
-    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@DEV_SERVER_IP "
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@65.2.167.182 "
      docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
      docker run -d -p 8081:8081 $IMAGE_NAME:$IMAGE_TAG"
   only: 
