@@ -4,7 +4,7 @@ variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
   IMAGE_TAG: "1.0"
   DOCKER_TLS_CERTDIR: "/certs"
-  DEV_SERVER_IP: 65.2.167.182
+  DEV_SERVER_IP: 3.7.138.38
 
 services:
   - docker:19.03.12-dind
