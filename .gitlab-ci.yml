@@ -21,8 +21,8 @@ deploy:
     stage: deploy
     image: docker:latest
     before_script:
-        - apk add --update python-pip
         - pip install docker-compose
+        - apk add --update python-pip
         - which ssh-agent || ( apk update && apk add openssh-client )
         - eval $(ssh-agent -s)
         - ssh-keygen -p -m PEM -f cat ~/.ssh/id_rsa.pub
