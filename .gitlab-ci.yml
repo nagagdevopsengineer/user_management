@@ -40,9 +40,9 @@ deploy_to_dev:
     - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ubuntu@${DEV_SERVER_IP} "
       docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} $CI_REGISTRY &&
       export COMPOSE_PROJECT_NAME=dev &&
-      export DC_IAMGE_NAME=${CONTAINER_IMAGE} &&
-      export DC_IMAGE_TAG=${VERSION} &&
-      export DC_APP_PORT=3000 &&
+      export DC_IMAGE_NAME=$CI_REGISTRY_IMAGE &&
+      export DC_IMAGE_TAG=$IMAGE_TAG &&
+      export DC_APP_PORT=8081 &&
       docker-compose -f docker-compose.yaml down &&
       docker-compose -f docker-compose.yaml up -d" 
 
