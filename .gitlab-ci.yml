@@ -1,41 +1,50 @@
-stages:
-    - build
-    - deploy
+image: docker:19.03.12
 
-build:
-    stage: build
-    image:  maven:3.6.1-jdk-8-slim
-    script:
-        - echo "Building app..."
-        - export PATH=/usr/share/maven
-        - export PATH=/usr/share/java
-        - echo "Finished building the app."
-    artifacts:
-        #expire_in: 1 week
-        paths:
-            - target/consoleapp.jar
-    only:
-        - user-dev
+variables:
+  IMAGE_NAME: $CI_REGISTRY_IMAGE
+  IMAGE_TAG: "1.0"
+  DOCKER_TLS_CERTDIR: "/certs"
+  DEV_SERVER_IP: 65.2.167.182
 
-deploy:
-    stage: deploy
-    image: docker:latest
-    
-    before_script:
-        - which ssh-agent || ( apk update && apk add openssh-client )
-        - eval $(ssh-agent -s)
-        - ssh-keygen -p -m PEM -f vim ~/.ssh/id_rsa.pub
-        #- ssh-add <(echo -e "$SSH_PRIVATE_KEY")
-        - touch ~/.ssh/config
-        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-        - ssh-keyscan -H $DEPLOY_SERVER_IP >> ~/.ssh/known_hosts
-    script:
-        - echo "Deploying started..."
-        - scp -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ubuntu@${DEV_SERVER_IP}:/home/ubuntu
-        - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ubuntu@${DEV_SERVER_IP}"
-        - scp ./target/consoleapp.jar ubuntu@$DEPLOY_SERVER_IP:~/console-app/
-        - ssh ubuntu@$DEPLOY_SERVER_IP "sudo systemctl start consoleapp.service"
-        - echo "Finished deploying the app."
-    only:
-        - user-dev
+services:
+  - docker:19.03.12-dind
 
+stages:          # List of stages for jobs, and their order of execution
+  - build_image
+  - deploy_arrivnow-dev
+  # - deploy_arrivnow-sales-demo
+
+docker-build-image:
+  stage: build_image
+  tags:
+    - docker
+    - java
+  script:
+    - docker info
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+  when: always
+  only: 
+    - user-dev
+
+deploy_to_dev:
+  stage: deploy_arrivnow-dev
+  tags:
+    - docker
+    - java
+  before_script:
+    - chmod 400 $SSH_PRIVATE_KEY
+  script:
+    - scp -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ./docker-compose.yaml ubuntu@${DEV_SERVER_IP}:/home/ubuntu
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ubuntu@${DEV_SERVER_IP} "
+      docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} $CI_REGISTRY &&
+      export COMPOSE_PROJECT_NAME=dev &&
+      export DC_IMAGE_NAME=$CI_REGISTRY_IMAGE &&
+      export DC_IMAGE_TAG=$IMAGE_TAG &&
+      export DC_APP_PORT=8081 &&
+      docker-compose -f docker-compose.yaml down &&
+      docker-compose -f docker-compose.yaml up -d" 
+
+  only: 
+    - user-dev
