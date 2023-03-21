@@ -14,6 +14,9 @@ stages:          # List of stages for jobs, and their order of execution
 
 docker-build-image:
   stage: build_image
+  tags:
+    - docker
+    - java
   script:
     - docker info
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
@@ -26,23 +29,22 @@ docker-build-image:
     - develop
 
 
-deploy-arrivnow-dev:
-  stage: deploy_arrivnow-dev
+#stage: deploy_arrivnow-dev
   #needs: ["docker-build-image"]
-  image: vapprtech/awskubectl:latest
-  before_script:
-    - aws eks update-kubeconfig --name arrivnow-dev --region us-east-2 
+  #image: vapprtech/awskubectl:latest
+  #before_script:
+    #- aws eks update-kubeconfig --name arrivnow-dev --region us-east-2 
   
-    - kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
-  script:
+    #- kubectl create namespace usermanagement  --dry-run=client -o yaml | kubectl apply -f -   
+  #script:
      # - sed -i "s/latest/${CI_COMMIT_SHORT_SHA}/g" manifest/arrivnowdeployment.yaml
-      - kubectl apply -f manifest/*
-      - kubectl rollout restart deployment usermanagement -n usermanagement
-      - kubectl get pods -n usermanagement 
-      - kubectl get svc -n usermanagement -o wide
-  when: always
-  only: 
-    - develop
+      #- kubectl apply -f manifest/*
+      #- kubectl rollout restart deployment usermanagement -n usermanagement
+      #- kubectl get pods -n usermanagement 
+      #- kubectl get svc -n usermanagement -o wide
+  #when: always
+  #only: 
+    #- develop
 
 # deploy-arrivnow-sales-demo:
 #   stage: deploy_arrivnow-sales-demo
