@@ -197,19 +197,21 @@ public class MailService {
 				char[] otpc = RandomUtil.generateOTP();
 				String otps = new String(otpc);
 				otp.setOtp(Long.parseLong(otps));
-				//otp.setOtp(123456l);
+				
 				otp.setMobile(user.getMobile());
 				
 				OtpSMS = OtpSMS.replace("USERNAME", user.getFirstName());
 				OtpSMS = OtpSMS.replace("OTPN", otp.getOtp()+"");
 				if(user.getAuthorities().contains("ROLE_HELPER") || user.getAuthorities().contains("ROLE_DRIVER")) {
 					OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.dapp.hash"));
+					otp.setOtp(123456l);
 				}else if (user.getAuthorities().contains("ROLE_EMPLOYEE")) {
 					OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.eapp.hash"));
+					otp = sendOTP(otp,OtpSMS);
 				}
 				
 				//Commented due to low balance  will be un commented once twillio account recharged
-				otp = sendOTP(otp,OtpSMS);
+				
 				
 				
 				
