@@ -36,11 +36,12 @@ deploy_to_dev:
     - 'which ssh-agent || ( apt-get install -qq openssh-client )'
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null 
-    - chmod 600 ~/.ssh/id_rsa
-    - StrictHostKeyChecking no
-    #- echo -e "Host *\nStrictHostKeyChecking no\n" > ~/.ssh/config
     - eval "$(ssh-agent -s)"
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - ssh-add -l
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host *\nStrictHostKeyChecking no\n" > ~/.ssh/config
     - ssh-add ~/.ssh/id_rsa
     
   script:
