@@ -32,7 +32,16 @@ deploy_to_dev:
     - docker
     - java
   before_script:
-    - chmod 400 $SSH_PRIVATE_KEY
+    #- chmod 400 $SSH_PRIVATE_KEY
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - mkdir -p ~/.ssh
+    - touch ~/.ssh/id_rsa
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host *\nStrictHostKeyChecking no\n" > ~/.ssh/config
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@43.205.192.143 "
      docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
