@@ -32,7 +32,7 @@ deploy_to_dev:
     - docker
     - java
   before_script:
-    - chmod 400 $SSH_PRIVATE_KEY
+    - chmod 400 $.ssh/id_rsa
     
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@43.205.192.143 "
