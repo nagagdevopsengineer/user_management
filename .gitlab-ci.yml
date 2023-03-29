@@ -38,7 +38,7 @@ deploy_to_dev:
     - touch ~/.ssh/id_rsa
     - eval "$(ssh-agent -s)"
     - chmod 600 ~/.ssh/id_rsa
-    - ssh-keygen -f id_rsa -e -m pem
+    - ssh-keygen -i -f /.ssh/id_rsa/test.pem > test.pub
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - ssh-add -l
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
