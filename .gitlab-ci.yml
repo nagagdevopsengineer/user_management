@@ -37,11 +37,13 @@ deploy_to_dev:
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
     - eval "$(ssh-agent -s)"
+    - chmod 600 test.pem
+    - ls -l test.pem
     - ssh-keygen -i -f test.pem > test.pub
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - ssh-add -l
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
+    #- chmod 600 ~/.ssh/id_rsa
     - echo -e "Host *\nStrictHostKeyChecking no\n" > ~/.ssh/config
     - ssh-add ~/.ssh/id_rsa
     
