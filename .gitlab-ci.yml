@@ -33,7 +33,7 @@ deploy_to_dev:
     - java
   before_script:
     - chmod 400 $SSH_PRIVATE_KEY
-    - sh killport 8081
+    - ./killport 8081
     
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@65.2.167.182 "
