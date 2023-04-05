@@ -33,7 +33,6 @@ deploy_to_dev:
     - java
   before_script:
     - chmod 400 $SSH_PRIVATE_KEY
-    - fuser -k 8081/tcp
     
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@65.2.167.182 "
