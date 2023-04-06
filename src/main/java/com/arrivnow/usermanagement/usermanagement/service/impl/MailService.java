@@ -207,6 +207,7 @@ public class MailService {
 					otp.setOtp(123456l);
 				}else if (user.getAuthorities().contains("ROLE_EMPLOYEE")) {
 					OtpSMS = OtpSMS.replace("AppHashKey", env.getProperty("otp.eapp.hash"));
+					otp.setOtp(123456l);
 					otp = sendOTP(otp,OtpSMS);
 				}
 				
